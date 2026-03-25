@@ -1,0 +1,523 @@
+/* ========== 首页 Banner ========== */
+.hero {
+  width: 100%;
+  min-height: 380px;
+  background: url('/static/image/hero-bg.jpg'),
+              linear-gradient(135deg, #111, #090d18);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  padding: 50px 0;
+  text-shadow: 0 0 8px #000;
+}
+
+.hero-inner {
+  margin-left: 20px;
+}
+
+.hero-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.8rem;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.hero-sub {
+  color: #ccc;
+  font-size: 1.1rem;
+}
+
+/* ========== 通用区块 ========== */
+.home-section {
+  margin: 50px 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.section-header h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+}
+
+/* ========== 活动轮播 ========== */
+.event-carousel {
+  display: flex;
+  gap: 22px;
+  padding: 8px 4px 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+
+  /* 🔥 关键：隐藏滚动条（所有主流浏览器） */
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* IE / Edge */
+}
+
+.event-carousel::-webkit-scrollbar {
+  display: none;                  /* Chrome / Safari */
+}
+
+/* 轮播按钮 */
+.carousel-wrapper {
+  position: relative;
+}
+
+/* 左右按钮 */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+
+  background: rgba(22, 26, 34, 0.85);
+  color: #fff;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,.45);
+  transition: background .2s, transform .2s, opacity .2s;
+}
+
+.carousel-btn:hover {
+  background: rgba(124, 77, 255, 0.9);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.carousel-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-btn.prev {
+  left: -50px;
+}
+
+.carousel-btn.next {
+  right: -50px;
+}
+
+.carousel-btn {
+  opacity: 0.6;
+}
+
+.carousel-wrapper:hover .carousel-btn {
+  opacity: 1;
+}
+/* 小屏优化 */
+@media (max-width: 768px) {
+  .carousel-btn {
+    display: none; /* 移动端用滑动即可 */
+  }
+}
+
+/* 卡片 */
+.event-card {
+  min-width: 260px;
+  background: #161a22;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0,0,0,.4);
+  transition: transform .25s ease, box-shadow .25s ease;
+  scroll-snap-align: start;
+}
+
+.event-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 42px rgba(0,0,0,.6);
+}
+
+.event-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.event-info {
+  padding: 14px 16px;
+}
+
+.event-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.event-meta {
+  font-size: 13px;
+  color: #b0b3c5;
+}
+
+/* ========== 卡片式布局 ========== */
+.card-row,
+.genre-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+#genreRow {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 20px !important;
+  flex-wrap: nowrap !important;
+}
+
+#genreRow .genre-card {
+  width: 180px !important;
+  flex: 0 0 180px !important;
+}
+
+/* ======= 通用卡片风格（音乐卡、艺术家卡、曲风卡） ======= */
+.music-card,
+.artist-card-small,
+.genre-card {
+  background: #111;
+  border: 1px solid #222;
+  padding: 15px;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+.music-card:hover,
+.artist-card-small:hover,
+.genre-card:hover {
+  border-color: #ff00aa;
+  box-shadow: 0 0 12px rgba(255,0,170,0.3);
+}
+
+/* ========== 推荐歌曲卡片 ========== */
+.music-cover {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.artist-name {
+  color: #bbb;
+  margin-bottom: 5px;
+}
+/* ===== 推荐歌曲：固定 5 个 ===== */
+.track-row {
+  display: flex;
+  flex-direction: row;      /* 🔥 强制横向 */
+  justify-content: center;
+  align-items: stretch;
+  gap: 20px;
+  flex-wrap: nowrap;        /* 🔥 禁止换行 */
+  width: 100%;
+}
+
+/* 每张卡片固定宽度，5 张刚好一行 */
+.track-row .music-card {
+  width: 180px;             /* 固定宽度 */
+  flex: 0 0 180px;          /* 🔥 不拉伸、不压缩 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 小屏降级 */
+@media (max-width: 1024px) {
+  #trackRow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  #trackRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ===== 歌曲卡片按钮组 ===== */
+.track-actions {
+  margin-top: auto;              /* ⭐ 关键：按钮始终贴底 */
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.music-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 圆形按钮通用 */
+.track-btn.circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  border: none;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s;
+}
+
+/* 播放按钮 */
+.track-btn.play-now {
+  background: linear-gradient(135deg, #7c4dff, #4f46e5);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(79, 70, 229, 0.45);
+}
+
+.track-btn.play-now:hover {
+  transform: scale(1.12);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.65);
+}
+
+/* 插播按钮 */
+.track-btn.add-next {
+  background: rgba(255,255,255,0.08);
+  color: #ddd;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+.track-btn.add-next:hover {
+  background: rgba(255,255,255,0.18);
+  transform: scale(1.12);
+}
+
+/* ===== 热门艺术家卡片 ===== */
+.artist-card-small {
+  position: relative;
+  width: 180px;
+  padding: 14px 12px 16px;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #12131a, #0c0d13);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.artist-card-small:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65);
+}
+
+#artistRow {
+  display: flex !important;
+  justify-content: center !important;
+  flex-wrap: nowrap !important;
+  gap: 20px !important;
+}
+#artistRow .artist-card-small {
+  width: 180px !important; /* 强制每个卡片的宽度 */
+  flex: 0 0 180px !important; /* 防止拉伸 */
+}
+/* ===== 艺术家头像 ===== */
+
+
+.artist-avatar-wrap {
+  width: 92px;
+  height: 92px;
+  margin: 8px auto 10px;
+  border-radius: 50%;
+  overflow: hidden;          /* 🔥 裁剪图片 */
+  background: #1a1b22;
+  box-shadow:
+    0 0 0 3px rgba(122, 91, 255, 0.25),
+    0 8px 18px rgba(0, 0, 0, 0.55);
+}
+
+.artist-avatar-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;         /* 🔥 保持比例填充 */
+  display: block;
+}
+
+.artist-avatar.placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* ===== 无头像占位 ===== */
+.artist-avatar.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, #2b2d42, #0f1020);
+  color: #8a8cff;
+  font-size: 32px;
+}
+
+.artist-avatar.placeholder::after {
+  content: "♪";
+  opacity: 0.8;
+}
+
+/* ===== 艺术家名称 ===== */
+.artist-card-small h4 {
+  margin: 6px 0 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f0f0f5;
+}
+
+.artist-card-small h4 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.artist-card-small h4 a:hover {
+  text-decoration: underline;
+}
+
+/* ===== 收藏按钮 ===== */
+.artist-card-small .fav-btn {
+  margin-top: 6px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.artist-card-small .fav-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: scale(1.05);
+}
+
+.artist-card-small .unfav-btn {
+  margin-top: 6px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  color: #fff;
+  border: none;
+
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.45);
+  transition: all 0.25s ease;
+}
+
+.artist-card-small .unfav-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 14px rgba(236, 72, 153, 0.65);
+  opacity: 0.95;
+}
+
+/* ========== 热门曲风卡片 ========== */
+.genre-card h4 {
+  margin-bottom: 8px;
+}
+
+.genre-play-btn,
+.play-genre {  /* 兼容第二份模板 class */
+  margin-top: 10px;
+  padding: 6px 10px;
+  border: 1px solid #555;
+  background: #222;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  color:white;
+}
+
+.genre-play-btn:hover,
+.play-genre:hover {
+  border-color: #ff00aa;
+  color: #ff00aa;
+}
+
+/* ========== 刷新按钮统一处理 ========== */
+.refresh-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #222;
+  border: 1px solid #444;
+  cursor: pointer;
+  color: #ccc;
+}
+
+.refresh-btn:hover {
+  border-color: #00f0ff;
+  color: #00f0ff;
+}
+/* ========== 页面整体左右留白 ========== */
+.page-container {
+  max-width: 1200px;      /* 控制页面最大宽度 */
+  margin: 0 auto;         /* 居中 */
+  padding: 0 40px;        /* 左右呼吸空间 */
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 0 16px;      /* 移动端更紧凑 */
+  }
+}
+
+/* ===== 强制修复推荐歌曲为一行 5 个（DEBUG 级） ===== */
+
+#trackRow {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  gap: 20px !important;
+}
+
+#trackRow > .music-card {
+  width: 180px !important;
+  flex: 0 0 180px !important;
+  max-width: 180px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* =========================
+   收藏到歌单 · 通用按钮样式
+========================= */
+
+.btn-fav-playlist {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #ff6b9a;
+  background: rgba(255, 255, 255, 0.12);
+  transition: all .2s ease;
+}
+
+.btn-fav-playlist:hover {
+  background: rgba(255, 107, 154, 0.25);
+  transform: scale(1.05);
+}
+
+/* ⭐ 已收藏状态 */
+.btn-fav-playlist.is-added {
+  background: linear-gradient(135deg, #ff5c9a, #ff3767);
+  color: #fff;
+}

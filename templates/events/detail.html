@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/event.css' %}" data-page-css>
+{% endblock %}
+
+{% block content %}
+<section class="event-detail">
+
+  <a href="{% url 'events:list' %}" class="back-to-list js-spa-link">← 返回活动列表</a>
+
+  {% if event.poster %}
+    <div class="event-hero">
+      <img src="{{ event.poster.url }}" class="lightbox-trigger">
+    </div>
+  {% endif %}
+
+  <div class="event-detail-card">
+    <h1>{{ event.title }}</h1>
+
+    <p class="meta">
+      📍 {{ event.city }} · {{ event.venue }}
+      <br>
+      🕒 {{ event.start_time|date:"Y-m-d" }} - {{ event.end_time|date:"Y-m-d" }}
+    </p>
+
+    <div class="event-info-section">
+
+      {% if event.price %}
+        <div class="event-info-block price">
+          <div class="event-info-title">票价</div>
+          <div class="event-info-content">
+            {{ event.price }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if event.purchase_info %}
+        <div class="event-info-block notice">
+          <div class="event-info-title">购票须知</div>
+          <div class="event-info-content">
+            {{ event.purchase_info|linebreaksbr }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if event.description %}
+        <div class="event-info-block description">
+          <div class="event-info-title">活动简介</div>
+          <div class="event-info-content">
+            {{ event.description|linebreaksbr }}
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+
+    {% if event.ticket_link %}
+      <a href="{{ event.ticket_link }}" target="_blank" class="ticket-btn">
+        🎟 前往购票
+      </a>
+    {% endif %}
+  </div>
+
+</section>
+{% endblock %}

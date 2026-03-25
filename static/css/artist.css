@@ -1,0 +1,463 @@
+
+/* 页面布局 */
+.artists-page {
+  max-width: 1320px;       /* 控制最大宽度 */
+  margin: 0 auto;          /* 居中 */
+  padding-left: 32px;      /* 左右留白 */
+  padding-right: 32px;
+}
+
+@media (min-width: 1600px) {
+  .artists-page {
+    max-width: 1400px;
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* 控制栏 */
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.filter-form {
+  display: flex;
+  gap: 12px;
+}
+
+.input-text, .input-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+/* 按钮 */
+.btn-primary {
+  padding: 8px 16px;
+  background: #4a6cf7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* 顶部轮播 */
+.carousel-section {
+  position: relative;
+  margin: 0 auto 60px;
+  padding: 32px 0;
+}
+
+.carousel-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(74,108,247,0.15),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px 40px;
+}
+
+.carousel-card {
+  min-width: 280px;
+  background: #141414;
+  border-radius: 18px;
+  padding: 14px;
+  text-align: center;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.carousel-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+}
+
+.carousel-img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 14px;
+  display: block;
+}
+
+
+.carousel-info h4 {
+  margin-top: 14px;
+  font-size: 22px;
+}
+
+.carousel-info p {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 28px;
+  color: #fff;
+  cursor: pointer;
+  z-index: 10;
+
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background .2s, transform .2s;
+}
+
+.carousel-nav:hover {
+  background: rgba(74,108,247,0.85);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-track {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE 10+ */
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;                /* Chrome / Safari */
+}
+
+#carouselPrev { left: -60px; }
+#carouselNext { right: -60px; }
+
+/* 艺术家卡片布局 */
+.artist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.artist-card {
+  background: #131313;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  transition: transform .25s ease, box-shadow .25s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  overflow: hidden;
+}
+
+.artist-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+.artist-img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 260px;
+  background: #333;
+  border-radius: 10px;
+  color: #fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 60px;
+}
+
+.card-info h3 {
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.genre-list a {
+  color: #4a6cf7;
+  text-decoration: none;
+}
+
+.country {
+  color: #bbb;
+}
+
+/* 收藏按钮 */
+.fav-btn {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.fav-btn:hover {
+  background: #444;
+}
+
+.artists-page .fav-btn.is-favorited {
+  background: linear-gradient(135deg, #ff5c9a, #ff3767);
+  box-shadow: 0 4px 14px rgba(255, 80, 120, 0.45);
+}
+
+.artists-page .fav-btn.is-favorited:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 80, 120, 0.6);
+}
+
+/* 分页 */
+.pagination {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.pagination a {
+  color: #4a6cf7;
+  margin: 0 10px;
+}
+
+
+/*专辑详情页*/
+.album-detail {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  color: #eaeaea;
+}
+.album-header {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+.album-cover {
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.08);
+}
+
+.album-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #aaa;
+}
+.album-meta h1 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.album-artists,
+.album-release {
+  font-size: 14px;
+  color: #bdbdbd;
+  margin-bottom: 8px;
+}
+
+.album-artists a {
+  color: #cfd6ff;
+  text-decoration: none;
+}
+
+.album-artists a:hover {
+  text-decoration: underline;
+}
+.album-tracks {
+  margin-bottom: 56px;
+}
+
+.album-tracks h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+.track-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.track-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  transition: background .2s ease;
+}
+
+.track-row:hover {
+  background: rgba(255,255,255,0.06);
+}
+.track-name {
+  font-size: 15px;
+  font-weight: 500;
+}
+.track-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.track-actions button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.track-actions button:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.album-comments {
+  margin-top: 64px;
+  padding: 32px 28px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 20px;
+}
+
+.album-comments h2 {
+  margin-bottom: 24px;
+}
+
+.comment-form {
+  background: rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 32px;
+}
+.comment-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+.reply-form {
+  margin-top: 12px;
+}
+
+.reply-form textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  margin-bottom: 8px;
+  resize: vertical;
+}
+
+.comment-form button,
+.reply-form button {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #7b61ff, #5a9bff);
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+}
+.comment-list {
+  gap: 28px;
+}
+
+.comment-item {
+  padding: 20px;
+  border-radius: 16px;
+}
+
+.comment-meta {
+  font-size: 13px;
+  color: #bbb;
+  margin-bottom: 8px;
+}
+
+.comment-meta strong {
+  color: #fff;
+}
+.comment-content {
+  margin-bottom: 12px;
+}
+
+.comment-actions {
+  margin-bottom: 8px;
+}
+
+.btn-like-comment {
+  background: none;
+  border: none;
+  color: #ff7b9c;
+  cursor: pointer;
+  font-size: 13px;
+}
+.comment-replies {
+  margin-left: 20px;
+  margin-top: 12px;
+  padding-left: 12px;
+  border-left: 2px solid rgba(255,255,255,0.08);
+}
+
+.comment-reply {
+  font-size: 13px;
+  color: #ccc;
+}
+@media (max-width: 768px) {
+  .album-header {
+    grid-template-columns: 1fr;
+  }
+
+  .album-cover {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+}

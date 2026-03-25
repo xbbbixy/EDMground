@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ playlist.name }} - 歌单{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/playlist-detail.css' %}">
+
+<section class="playlist-detail-page" data-playlist-id="{{ playlist.id }}">
+  <div class="playlist-back">
+    <a
+      href="{% url 'users:profile' playlist.user.id %}"
+      class="btn-back js-spa-link"
+    >
+      ← 返回{% if request.user == playlist.user %}个人中心{% else %}TA的个人中心{% endif %}
+    </a>
+  </div>
+
+  <!-- 歌单头部 -->
+  <div class="playlist-header card">
+    <div class="playlist-cover-large">
+      {% if playlist.cover %}
+        <img src="{{ playlist.cover.url }}" class="playlist-cover-img">
+      {% else %}
+        <div class="playlist-placeholder-large">🎵</div>
+      {% endif %}
+    </div>
+
+    <div class="playlist-meta">
+      <h1 class="playlist-title">{{ playlist.name }}</h1>
+      <p class="playlist-desc {% if not playlist.description %}muted{% endif %}">
+        {{ playlist.description|default:'' }}
+      </p>
+
+
+      <div class="playlist-actions">
+        <button class="btn-playlist-play js-play-playlist">
+          ▶ 播放歌单
+        </button>
+        {% if request.user == playlist.user %}
+        <button class="btn-playlist-edit js-edit-playlist">
+          编辑
+        </button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 歌曲列表 -->
+  <div class="card">
+    <h3 class="card-title">🎶 歌单歌曲</h3>
+
+    <div class="tracks-list">
+      {% for t in playlist.tracks.all %}
+        <div class="track-card">
+
+          <div class="track-info">
+            <strong class="track-title">{{ t.title }}</strong>
+            <p class="track-artists">
+              {% for a in t.artists.all %}
+                <a href="{% url 'artists:detail' a.id %}" class="js-spa-link">{{ a.name }}</a>{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </p>
+          </div>
+
+          <div class="track-actions">
+            <button
+              class="btn-play js-add-to-player"
+              data-autoplay="true"
+              data-track-id="{{ t.id }}"
+              data-title="{{ t.title }}"
+              data-artists="{% for a in t.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+              data-audio="{{ t.audio_file.url }}"
+              data-cover=""
+              data-genres="{% for g in t.genres.all %}{{ g.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
+            >▶</button>
+
+            <button
+              class="btn-queue js-add-to-player"
+              data-autoplay="false"
+              data-track-id="{{ t.id }}"
+              data-title="{{ t.title }}"
+              data-artists="{% for a in t.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+              data-audio="{{ t.audio_file.url }}"
+              data-cover=""
+              data-genres="{% for g in t.genres.all %}{{ g.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
+            >＋</button>
+
+            <button
+              class="btn-remove js-remove-track"
+              data-playlist-id="{{ playlist.id }}"
+              data-track-id="{{ t.id }}"
+            >❤️</button>
+          </div>
+        </div>
+      {% empty %}
+        <p class="muted">歌单里还没有歌曲</p>
+      {% endfor %}
+    </div>
+  </div>
+
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/playlist-detail.js' %}"></script>
+{% endblock %}

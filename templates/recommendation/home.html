@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}推荐 - EDMground{% endblock %}
+{% block content %}
+<h2>个性化推荐</h2>
+
+{% if user.is_authenticated %}
+  {% if personalized_tracks %}
+    <div class="track-grid">
+      {% for t in personalized_tracks %}
+        <div class="track-card" data-id="{{ t.id }}">
+          <p><strong>{{ t.title }}</strong> - {{ t.artist.name }}</p>
+          <button class="like-btn" data-id="{{ t.id }}">❤️ {{ t.likes }}</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>暂无个性化推荐。</p>
+  {% endif %}
+{% else %}
+  <p>登录以获取个性化推荐。</p>
+{% endif %}
+
+<hr>
+
+<h2>🔥 热门曲目</h2>
+<div class="track-grid">
+  {% for t in popular_tracks %}
+    <div class="track-card" data-id="{{ t.id }}">
+      <p><strong>{{ t.title }}</strong> - {{ t.artist.name }}</p>
+      <button class="like-btn" data-id="{{ t.id }}">❤️ {{ t.likes }}</button>
+    </div>
+  {% empty %}
+    <p>暂无热门曲目。</p>
+  {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const id = this.dataset.id;
+      fetch(`/recommendation/like/${id}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      }).then(res => res.json())
+      .then(data => {
+        this.innerText = `❤️ ${data.likes}`;
+      });
+    });
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}注册 - EDMground{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h2>创建新账号</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="auth-btn">注册</button>
+        </form>
+
+        <div class="auth-footer">
+            已有账号？
+            <a href="{% url 'users:login' %}">点此登录</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

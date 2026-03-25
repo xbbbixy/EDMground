@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}{{ track.title }}{% endblock %}
+{% block content %}
+<h2>{{ track.title }}</h2>
+<p>艺术家：{{ track.artist.name }}</p>
+<p>播放次数：{{ track.plays }}</p>
+<p>喜欢数：{{ track.likes }}</p>
+
+{% if track.audio_file %}
+<audio controls src="{{ track.audio_file.url }}">Your browser does not support audio.</audio>
+{% endif %}
+{% endblock %}

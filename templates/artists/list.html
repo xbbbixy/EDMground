@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}艺术家 - EDMground{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/artist.css' %}">
+<link rel="stylesheet" href="{% static 'css/event.css' %}">
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/artists.js' %}" data-page-js></script>
+{% endblock %}
+{% block content %}
+
+<div class="artists-page container">
+
+  <h2 class="page-title">艺术家库</h2>
+
+  <!-- 筛选栏 -->
+  <form method="get" class="event-filter">
+    <input type="text" name="q" placeholder="搜索艺术家…" value="{{ q }}">
+
+    <select name="genre">
+      <option value="">所有曲风</option>
+      {% for g in genres %}
+        <option value="{{ g.slug }}" {% if selected_genre == g.slug %}selected{% endif %}>{{ g.name }}</option>
+      {% endfor %}
+    </select>
+
+    <select name="sort">
+      <option value="name" {% if sort == 'name' %}selected{% endif %}>名称 A-Z</option>
+      <option value="popularity" {% if sort == 'popularity' %}selected{% endif %}>人气最高</option>
+    </select>
+
+    <button type="submit">筛选</button>
+  </form>
+
+  <!-- 顶部轮播 -->
+  <section class="carousel-section">
+    <button id="carouselPrev" class="carousel-nav">‹</button>
+
+    <div class="carousel-track" id="artistCarousel">
+      {% for a in carousel_artists %}
+      <div class="carousel-card">
+        <a href="{% url 'artists:detail' a.id %}"class="js-spa-link">
+          {% if a.avatar %}
+            <img src="{{ a.avatar.url }}" class="carousel-img">
+          {% else %}
+            <div class="avatar-placeholder">{{ a.name|slice:":1" }}</div>
+          {% endif %}
+        </a>
+        <div class="carousel-info">
+          <h4>{{ a.name }}</h4>
+          <p>{{ a.country }}</p>
+          <button
+              class="fav-btn {% if user.is_authenticated and a in user.profile.favorites_artists.all %}is-favorited{% endif %}"
+              data-id="{{ a.id }}"
+            >
+              <span class="fav-icon">❤</span>
+              <span class="fav-text">
+                {% if user.is_authenticated and a in user.profile.favorites_artists.all %}
+                  已收藏
+                {% else %}
+                  收藏
+                {% endif %}
+              </span>
+              <span class="fav-count">{{ a.favorites_count }}</span>
+            </button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <button id="carouselNext" class="carousel-nav">›</button>
+  </section>
+
+  <!-- 艺术家列表 -->
+  <div class="artist-grid">
+    {% for artist in page_obj %}
+    <div class="artist-card">
+
+      <a href="{% url 'artists:detail' artist.id %}"class="js-spa-link">
+        {% if artist.avatar %}
+          <img src="{{ artist.avatar.url }}" class="artist-img">
+        {% else %}
+          <div class="avatar-placeholder">{{ artist.name|slice:":1" }}</div>
+        {% endif %}
+      </a>
+
+      <div class="card-info">
+        <a href="{% url 'artists:detail' artist.id %}"class="js-spa-link">
+          <h3>{{ artist.name }}</h3>
+        </a>
+        <p class="country">{{ artist.country }}</p>
+
+        <p class="genre-list">
+          {% for g in artist.genres.all|slice:":3" %}
+            <a href="{% url 'genres:detail' g.slug %}" class="js-spa-link">{{ g.name }}</a>{% if not forloop.last %}, {% endif %}
+          {% empty %}
+            <span>未分类</span>
+          {% endfor %}
+        </p>
+      </div>
+
+      <button
+          class="fav-btn card-fav {% if user.is_authenticated and artist in user.profile.favorites_artists.all %}is-favorited{% endif %}"
+          data-id="{{ artist.id }}"
+        >
+          <span class="fav-icon">❤</span>
+          <span class="fav-text">
+            {% if user.is_authenticated and artist in user.profile.favorites_artists.all %}
+              已收藏
+            {% else %}
+              收藏
+            {% endif %}
+          </span>
+          <span class="fav-count">{{ artist.favorites_count }}</span>
+        </button>
+
+
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- 分页 -->
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}&sort={{ sort }}&genre={{ selected_genre }}&q={{ q }}" class="js-spa-link">上一页</a>
+    {% endif %}
+    <span>第 {{ page_obj.number }} / 共 {{ page_obj.paginator.num_pages }} 页</span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}&sort={{ sort }}&genre={{ selected_genre }}&q={{ q }}" class="js-spa-link">下一页</a>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}

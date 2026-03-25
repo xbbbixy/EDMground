@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}发表新帖 - 社区{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/community.css' %}" data-page-css>
+{% endblock %}
+{% block content %}
+<div class="page-container">
+  <h1>发表新帖</h1>
+
+  {% if error %}
+    <p style="color: #f55;">{{ error }}</p>
+  {% endif %}
+
+  {# enctype 一定要加，否则文件传不过来 #}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label>板块</label>
+      <select name="category">
+        <option value="">请选择</option>
+        {% for cat in categories %}
+          <option value="{{ cat.id }}"
+            {% if cat.id|stringformat:"s" == request.GET.category %}selected{% endif %}>
+            {{ cat.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+      {# ✅ 新增：关联曲风（可选），用于「风格探秘」联动 #}
+    <div class="form-group">
+      <label>关联曲风（可选）</label>
+      <select name="genre">
+        <option value="">不关联曲风</option>
+        {% for g in genres %}
+          <option value="{{ g.id }}"
+            {% if g.id|stringformat:"s" == selected_genre %}selected{% endif %}>
+            {{ g.name }}
+          </option>
+        {% endfor %}
+      </select>
+      <p class="form-help">
+        如果这是「风格探秘」下的帖子，建议选择对应曲风，方便在曲风详情页显示相关讨论。
+      </p>
+    </div>
+
+    <div class="form-group">
+      <label>标题</label>
+      <input type="text" name="title" value="{{ request.POST.title }}">
+    </div>
+
+    <div class="form-group">
+      <label>内容</label>
+      <textarea name="content" rows="8">{{ request.POST.content }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>图片（可选）</label>
+      <input type="file" name="image" accept="image/*">
+    </div>
+
+    <div class="form-group">
+      <label>音频（可选）</label>
+      <input type="file" name="audio" accept="audio/*">
+    </div>
+
+    <div class="form-group">
+      <label>视频（可选）</label>
+      <input type="file" name="video" accept="video/*">
+    </div>
+
+    <button type="submit" class="btn-primary">发布</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,201 @@
+
+.playlist-detail-page {
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.playlist-header {
+  display: flex;
+  gap: 24px;
+}
+
+.playlist-cover-large {
+  width: 200px;
+  height: 200px;
+}
+
+.playlist-cover-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.playlist-placeholder-large {
+  width: 100%;
+  height: 100%;
+  background: #23283a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+}
+
+.btn-remove {
+  background: rgba(255,107,107,.2);
+  color: #ff6b6b;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+}
+
+/* 返回个人中心 */
+.playlist-back {
+  margin-bottom: 12px;
+}
+
+.btn-back {
+  display: inline-block;
+  color: #aaa;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color .2s;
+}
+
+.btn-back:hover {
+  color: #fff;
+}
+
+/* ===============================
+   歌单详情页 · 歌曲条（对齐艺术家详情页）
+================================ */
+
+/* 歌曲列表整体 */
+.playlist-detail-page .tracks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 单条歌曲卡片 */
+.playlist-detail-page .track-card {
+  padding: 16px 18px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(5px);
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.playlist-detail-page .track-card:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* 歌曲信息 */
+.playlist-detail-page .track-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.playlist-detail-page .track-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* 艺术家名 */
+.playlist-detail-page .track-artists {
+  font-size: 16px;
+  color: rgba(255,255,255,0.7);
+  margin: inherit;
+}
+
+/* 操作区按钮组 */
+.playlist-detail-page .track-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* 复用 artist 页的按钮手感 */
+.playlist-detail-page .track-actions .btn-play,
+.playlist-detail-page .track-actions .btn-queue,
+.playlist-detail-page .track-actions .btn-remove {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #fff;
+  background: rgba(255,255,255,0.18);
+  transition: background .2s ease, transform .2s ease;
+}
+
+.playlist-detail-page .track-actions .btn-play:hover,
+.playlist-detail-page .track-actions .btn-queue:hover,
+.playlist-detail-page .track-actions .btn-remove:hover {
+  background: rgba(255,255,255,0.32);
+  transform: scale(1.05);
+}
+
+/* 移除按钮特殊色（保留你的语义） */
+.playlist-detail-page .btn-remove {
+  background: rgba(255,107,107,0.25);
+  color: #ff6b6b;
+}
+
+.playlist-detail-page .btn-remove:hover {
+  background: rgba(255,107,107,0.45);
+}
+
+/* ===============================
+   歌单详情页 · 头部操作按钮
+================================ */
+
+.playlist-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+/* ▶ 播放歌单（主按钮） */
+.btn-playlist-play {
+  background: linear-gradient(135deg, #7c4dff, #5b3df5);
+  border: none;
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s;
+}
+
+.btn-playlist-play:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(124, 77, 255, 0.45);
+  opacity: 0.95;
+}
+
+/* ✏ 编辑（次按钮） */
+.btn-playlist-edit {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;
+  padding: 9px 20px;
+  font-size: 14px;
+  color: #eee;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background .2s ease, border-color .2s ease, color .2s ease;
+}
+
+.btn-playlist-edit:hover {
+  background: rgba(255,255,255,0.22);
+  border-color: rgba(255,255,255,0.4);
+  color: #fff;
+}

@@ -1,0 +1,383 @@
+/* 页面整体 */
+.artist-detail-page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #eee;
+}
+
+/* 顶部个人信息布局 */
+.artist-header {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  padding: 30px;
+  background: rgba(20, 20, 35, 0.6);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* 左侧头像 */
+.avatar-wrapper {
+  flex-shrink: 0;
+}
+
+.artist-avatar {
+  width: 220px;
+  height: 220px;
+  border-radius: 14px;
+  object-fit: cover;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+.avatar-placeholder {
+  width: 220px;
+  height: 220px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4e5fff, #8a3fe8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 72px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* 信息区 */
+.artist-info {
+  flex: 1;
+}
+
+.artist-name {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.artist-country {
+  font-size: 18px;
+  opacity: 0.8;
+  margin-bottom: 16px;
+}
+
+.artist-bio {
+  line-height: 1.6;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+/* 曲风 */
+.artist-genres {
+  margin-bottom: 16px;
+}
+
+.genre-tag {
+  background: rgba(255,255,255,0.12);
+  padding: 4px 10px;
+  margin-right: 6px;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #bcd4ff;
+  transition: 0.2s;
+}
+
+.genre-tag:hover {
+  background: rgba(112,148,255,0.4);
+}
+
+/* 社交媒体链接 */
+.artist-socials {
+  margin-bottom: 22px;
+}
+
+.social-btn {
+  display: inline-block;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  margin-right: 8px;
+  font-size: 14px;
+  transition: 0.2s;
+  color: #e0e0e0;
+}
+
+.social-btn:hover {
+  background: rgba(120,150,255,0.3);
+}
+
+/* 分割线 */
+.divider {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  margin: 40px 0;
+}
+
+/* 热门歌曲区 */
+.top-tracks-section .section-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.tracks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.track-card {
+  padding: 16px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(5px);
+}
+
+.track-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.track-plays {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.track-player {
+  height: 32px;
+}
+
+.no-tracks{
+  opacity: 0.6;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+.no-albums{
+  opacity: 0.6;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .artist-header {
+    flex-direction: column;
+    align-items: center;
+  }
+  .artist-info {
+    text-align: center;
+  }
+}
+
+/* 未收藏 */
+.artist-detail-page .fav-btn {
+  padding: 10px 18px;
+  font-size: 16px;
+  border-radius: 10px;
+
+  background: linear-gradient(135deg, #5e7cff, #8f4efc);
+  color: #fff;
+  border: none;
+
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(100, 120, 255, 0.4);
+  transition: all 0.25s ease;
+}
+
+.artist-detail-page .fav-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(120, 140, 255, 0.55);
+}
+
+/* 已收藏 */
+.artist-detail-page .fav-btn.is-favorited {
+  background: linear-gradient(135deg, #ff5c9a, #ff3767);
+  box-shadow: 0 4px 14px rgba(255, 80, 120, 0.45);
+}
+
+.artist-detail-page .fav-btn.is-favorited:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 80, 120, 0.6);
+}
+
+
+.track-genres {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.track-genres .genre-tag {
+  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  color: #cfd6ff;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.track-genres .genre-tag:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* ===== 艺术家 · 专辑列表 ===== */
+.artist-albums-section {
+  margin-top: 5px;
+}
+
+.artist-albums-section .section-title {
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.album-card {
+  display: block;
+  background: rgba(255,255,255,0.06);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.album-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+.album-cover {
+  aspect-ratio: 1 / 1;
+  background: rgba(255,255,255,0.08);
+}
+
+.album-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.album-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  opacity: 0.6;
+}
+
+.album-info {
+  padding: 12px 14px;
+}
+
+.album-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.album-meta {
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.track-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.track-actions .btn-play,
+.track-actions .btn-queue,
+.track-actions  .btn-fav-playlist{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #fff;
+  background: rgba(255,255,255,0.18);
+  transition: background .2s ease, transform .2s ease;
+}
+
+.track-actions .btn-play:hover,
+.track-actions .btn-queue:hover,
+ .track-actions  .btn-fav-playlist:hover{
+  background: rgba(255,255,255,0.32);
+  transform: scale(1.05);
+}
+
+.track-actions .btn-fav-playlist.is-added {
+  background: linear-gradient(135deg, #ff5c9a, #ff3767);
+  color: #fff;
+}
+/* ===== 推荐音乐分页 ===== */
+.tracks-pagination {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 13px;
+}
+
+.tracks-pagination .page-link {
+  color: #cfd6ff;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+}
+
+.tracks-pagination .page-link:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+.tracks-pagination .page-info {
+  opacity: 0.7;
+}
+
+/* ===== 推荐 / 专辑 切换 Tabs ===== */
+.artist-section-tabs {
+  display: flex;
+  gap: 24px;
+  margin: 32px 0 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.section-tab {
+  background: none;
+  border: none;
+  padding: 10px 4px;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  position: relative;
+}
+
+.section-tab.active {
+  color: #fff;
+}
+
+.section-tab.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background: #7b61ff;
+  border-radius: 2px;
+}
+

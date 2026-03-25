@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ category.name }} - 社区{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/community.css' %}" data-page-css>
+{% endblock %}
+{% block content %}
+<div class="page-container">
+  <h1>{{ category.name }}</h1>
+  <p>{{ category.description }}</p>
+
+  <div class="category-toolbar">
+    <form method="get" class="search-form">
+      <input type="text" name="q" placeholder="搜索帖子..." value="{{ q }}">
+      <button type="submit">搜索</button>
+    </form>
+
+    {% if user.is_authenticated %}
+      <a href="{% url 'community:post_create' %}?category={{ category.id }}" class="btn-primary">+ 发表新帖</a>
+    {% endif %}
+  </div>
+
+  <div class="post-list">
+    {% for post in page_obj %}
+      <div class="post-card">
+        <h3><a href="{{ post.get_absolute_url }}" >{{ post.title }}</a></h3>
+        <p class="post-meta">
+          {{ post.author.username }} · {{ post.created_at|date:"Y-m-d H:i" }} · ❤ {{ post.likes_count }} · 💬 {{ post.comments_count }}
+        </p>
+        <p class="post-excerpt">
+          {{ post.content|truncatechars:120 }}
+        </p>
+      </div>
+    {% empty %}
+      <p>这个板块还没有帖子。</p>
+    {% endfor %}
+  </div>
+
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}&q={{ q }}">上一页</a>
+    {% endif %}
+    <span>第 {{ page_obj.number }} / 共 {{ page_obj.paginator.num_pages }} 页</span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}&q={{ q }}">下一页</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

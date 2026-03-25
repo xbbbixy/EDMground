@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}EDMground - Home{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" data-page-css>
+{% endblock %}
+{% block content %}
+<div class="home-page container">
+
+  <!-- 顶部 Hero Banner -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1 class="hero-title">Feel The Beat. <br> Explore Electronic Music.</h1>
+      <p class="hero-sub">
+        探索艺术家、曲风、活动与社区，让电子音乐触手可及。
+      </p>
+    </div>
+  </section>
+
+  <!-- 热门活动 -->
+  <section class="home-section">
+    <div class="section-header">
+      <h2>🔥 热门活动</h2>
+      <a href="{% url 'events:list' %}" class="more-link js-spa-link">查看更多 →</a>
+    </div>
+
+    <div class="carousel-wrapper">
+
+  <button class="carousel-btn prev" aria-label="向左滚动">‹</button>
+
+  <div class="event-carousel home-carousel">
+    {% for e in featured_events %}
+      <a href="{% url 'events:detail' e.id %}" class="event-card js-spa-link">
+        {% if e.poster %}
+          <img src="{{ e.poster.url }}">
+        {% endif %}
+        <div class="event-info">
+          <h4 class="event-title">{{ e.title }}</h4>
+          <p class="event-meta">{{ e.city }} · {{ e.start_time|date:"Y-m-d" }}</p>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+
+  <button class="carousel-btn next" aria-label="向右滚动">›</button>
+
+</div>
+
+  </section>
+
+  <!-- 推荐歌曲 -->
+  <section class="home-section">
+    <div class="section-header">
+      <h2>🎧 为你推荐的歌曲</h2>
+      <button id="refreshTracks" class="refresh-btn">🔄 刷新</button>
+    </div>
+
+    {# ✅ 关键：给 home.js 一个刷新接口 #}
+    <div class="trackRow" id="trackRow"
+         data-refresh-url="{% url 'recommendation:home' %}?_ajax=tracks">
+      {% for t in recommend_tracks %}
+        <div class="music-card" data-id="{{ t.id }}">
+          {% if t.cover %}
+            <img src="{{ t.cover.url }}" class="music-cover" alt="{{ t.title }}">
+          {% endif %}
+
+          <h4>{{ t.title }}</h4>
+          <p class="artist-name">{{ t.artist.name }}</p>
+
+          {% if t.audio_file %}
+            <div class="track-actions">
+              <button
+                class="track-btn circle play-now js-add-to-player"
+                title="立即播放"
+                data-mode="play"
+                data-track-id="{{ t.id }}"
+                data-title="{{ t.title }}"
+                data-artists="{{ t.artist.name }}"
+                data-audio="{{ t.audio_file.url }}"
+                data-cover="{% if t.cover %}{{ t.cover.url }}{% endif %}"
+              >
+                ▶
+              </button>
+
+              <button
+                class="track-btn circle add-next js-add-to-player"
+                title="插播到下一首"
+                data-autoplay="false"
+                data-mode="next"
+                data-track-id="{{ t.id }}"
+                data-title="{{ t.title }}"
+                data-artists="{{ t.artist.name }}"
+                data-audio="{{ t.audio_file.url }}"
+              >
+                ＋
+              </button>
+
+              <button
+                  class="btn-fav-playlist js-fav-playlist {% if t.id in playlist_track_ids %}is-added{% endif %}"
+                  data-track-id="{{ t.id }}"
+                  title="收藏到歌单"
+                >
+                  ❤
+                </button>
+
+            </div>
+          {% else %}
+            <p class="muted">暂无音频</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- 热门艺术家 -->
+<section class="home-section">
+  <div class="section-header">
+    <h2>👑 热门艺术家</h2>
+    <button id="refreshArtists" class="refresh-btn">🔄 刷新</button>
+  </div>
+
+  <div class="js-spa-link card-row" id="artistRow"
+     data-toggle-url="{% url 'users:toggle_favorite_artist' %}">
+      {% for a in popular_artists %}
+        <div class="artist-card-small">
+          <div class="artist-avatar-wrap">
+            {% if a.avatar %}
+              <img class="artist-avatar" src="{{ a.avatar.url }}" alt="{{ a.name }}">
+            {% else %}
+              <div class="artist-avatar placeholder"></div>
+            {% endif %}
+          </div>
+          <h4>
+            <a class="js-spa-link" href="{% url 'artists:detail' a.id %}">{{ a.name }}</a>
+          </h4>
+
+        </div>
+      {% endfor %}
+    </div>
+</section>
+
+<!-- 曲风探索 -->
+<section class="home-section">
+  <div class="section-header">
+    <h2>🎚 曲风探索</h2>
+    <button id="refreshGenres" class="refresh-btn">🔄 刷新</button>
+  </div>
+
+  <div class="genre-row" id="genreRow"
+       data-random-url="/recommendation/random_tracks_by_genre/"
+       data-refresh-url="{% url 'recommendation:home' %}?_ajax=genres">
+    {% for g in popular_genres %}
+      <div class="genre-card">
+        <h4><a class="js-spa-link" href="{% url 'genres:detail' g.slug %}">{{ g.name }}</a></h4>
+
+        <button class="play-genre"
+                data-genre="{{ g.slug }}"
+                data-random-url="/recommendation/random_tracks_by_genre/">
+          ▶ 随机播放
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+
+</div>
+{% endblock %}

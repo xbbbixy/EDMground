@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ artist.name }} - 艺术家{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/artist-detail.css' %}" data-page-css>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/utils.js' %}" data-page-js></script>
+{% endblock %}
+
+{% block content %}
+<div class="artist-detail-page">
+
+  <!-- 顶部艺术家信息 -->
+  <div class="artist-header">
+
+    <div class="avatar-wrapper">
+      {% if artist.avatar %}
+        <img src="{{ artist.avatar.url }}" alt="{{ artist.name }}" class="artist-avatar">
+      {% else %}
+        <div class="avatar-placeholder">{{ artist.name|slice:":1" }}</div>
+      {% endif %}
+    </div>
+
+    <div class="artist-info">
+      <h1 class="artist-name">{{ artist.name }}</h1>
+      <p class="artist-country">{{ artist.country }}</p>
+
+      {% if artist.bio %}
+        <p class="artist-bio">{{ artist.bio }}</p>
+      {% endif %}
+
+      <p class="artist-genres">
+        <span>曲风：</span>
+        {# 使用 exists 更严谨地判断是否有曲风 #}
+        {% if artist.genres.exists %}
+          {% for g in artist.genres.all %}
+            <a href="{% url 'genres:detail' g.slug %}" class="genre-tag js-spa-link">{{ g.name }}</a>
+          {% endfor %}
+        {% else %}
+          <span class="no-genre">暂无曲风</span>
+        {% endif %}
+      </p>
+
+      <div class="artist-socials">
+        {% if artist.twitter %}<a href="{{ artist.twitter }}" target="_blank" class="social-btn">Twitter</a>{% endif %}
+        {% if artist.instagram %}<a href="{{ artist.instagram }}" target="_blank" class="social-btn">Instagram</a>{% endif %}
+        {% if artist.facebook %}<a href="{{ artist.facebook }}" target="_blank" class="social-btn">Facebook</a>{% endif %}
+        {% if artist.website %}<a href="{{ artist.website }}" target="_blank" class="social-btn">官网</a>{% endif %}
+      </div>
+
+      <button
+          class="fav-btn {% if is_favorited %}is-favorited{% endif %}"
+          data-id="{{ artist.id }}"
+        >
+         <span class="fav-icon">❤</span>
+          <span class="fav-text">
+            {% if is_favorited %}已收藏{% else %}收藏{% endif %}
+          </span>
+          <span class="fav-count">{{ artist.favorites_count }}</span>
+        </button>
+    </div>
+  </div>
+
+  <!-- 分割线 -->
+<!--  <hr class="divider">-->
+
+    <!-- 推荐 / 专辑 切换导航 -->
+    <div class="artist-section-tabs">
+      <button
+        class="section-tab active"
+        data-target="tracks-section"
+      >
+        全部音乐
+      </button>
+
+      <button
+        class="section-tab"
+        data-target="albums-section"
+      >
+        全部专辑
+      </button>
+    </div>
+
+
+  <!-- 全部歌曲 -->
+  <section class="top-tracks-section" id="tracks-section">
+<!--    <h2 class="section-title">推荐音乐</h2>-->
+
+    <div class="tracks-list">
+      {% for t in tracks_page %}
+      <div class="track-card">
+        <div class="track-info">
+          <strong class="track-title">{{ t.title }}</strong>
+<!--          <p class="track-plays">{{ t.plays }} 次播放</p>-->
+
+          {# 显示参与该曲目的所有艺术家（支持多艺术家）#}
+          {% if t.artists.all %}
+            <p class="track-artists">
+              {% for a in t.artists.all %}
+                <a href="{% url 'artists:detail' a.id %}" class="js-spa-link">{{ a.name }}</a>{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </p>
+          {% endif %}
+
+          <div class="track-genres">
+              {% for g in t.genres.all %}
+                <a
+                  href="{% url 'genres:detail' g.slug %}"
+                  class="genre-tag js-spa-link"
+                >
+                  {{ g.name }}
+                </a>
+              {% endfor %}
+            </div>
+
+        </div>
+
+        {% if t.audio_file %}
+          <div class="track-actions">
+              <!-- ▶ 播放 -->
+              <button
+                class="btn-play js-add-to-player"
+                data-autoplay="true"
+                data-track-id="{{ t.id }}"
+                data-title="{{ t.title }}"
+                data-artists="{% for a in t.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                data-audio="{{ t.audio_file.url }}"
+                data-cover="{% if t.cover %}{{ t.cover.url }}{% endif %}"
+                data-genres="{% for g in t.genres.all %}{{ g.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
+              >
+                ▶
+              </button>
+
+              <!-- ＋ 插播 -->
+              <button
+                class="btn-queue js-add-to-player"
+                data-autoplay="false"
+                data-track-id="{{ t.id }}"
+                data-title="{{ t.title }}"
+                data-artists="{% for a in t.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                data-audio="{{ t.audio_file.url }}"
+                data-cover=""
+                data-genres="{% for g in t.genres.all %}{{ g.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
+              >
+                ＋
+              </button>
+
+              <!-- ❤ 收藏 -->
+              <button
+                class="btn-fav-playlist js-fav-playlist {% if t.id in playlist_track_ids %}is-added{% endif %}"
+                data-track-id="{{ t.id }}"
+                title="收藏到歌单"
+              >❤</button>
+            </div>
+
+        {% endif %}
+      </div>
+      {% empty %}
+        <p class="no-tracks">暂无曲目</p>
+      {% endfor %}
+    </div>
+      <!--分页-->
+  {% if tracks_page.paginator.num_pages > 1 %}
+      <div class="tracks-pagination">
+        {% if tracks_page.has_previous %}
+          <a
+            href="?page={{ tracks_page.previous_page_number }}"
+            class="js-spa-link page-link "
+          >
+            ← 上一页
+          </a>
+        {% endif %}
+
+        <span class="page-info">
+          第 {{ tracks_page.number }} / {{ tracks_page.paginator.num_pages }} 页
+        </span>
+
+        {% if tracks_page.has_next %}
+          <a
+            href="?page={{ tracks_page.next_page_number }}"
+            class="js-spa-link page-link"
+          >
+            下一页 →
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </section>
+
+
+<!-- 全部专辑 -->
+<section class="artist-albums-section" id="albums-section" hidden>
+<!--  <h2 class="section-title">全部专辑</h2>-->
+
+  <div class="album-grid">
+    {% for album in albums %}
+      <a
+        href="{{ album.get_absolute_url }}"
+        class="album-card js-spa-link"
+      >
+        <div class="album-cover">
+          {% if album.cover %}
+            <img src="{{ album.cover.url }}" alt="{{ album.title }}">
+          {% else %}
+            <div class="album-cover-placeholder">💿</div>
+          {% endif %}
+        </div>
+
+        <div class="album-info">
+          <div class="album-title">{{ album.title }}</div>
+          <div class="album-meta">
+            {{ album.tracks.count }} 首歌曲
+          </div>
+        </div>
+      </a>
+    {% empty %}
+      <p class="no-albums">暂无专辑</p>
+    {% endfor %}
+  </div>
+</section>
+</div>
+
+{% endblock %}

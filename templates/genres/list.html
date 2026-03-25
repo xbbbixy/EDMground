@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}电子音乐曲风 - EDMground{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/genre.css' %}" data-page-css>
+<link rel="stylesheet" href="{% static 'css/event.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="genres-page container">
+
+  <!-- 顶部标题 -->
+  <header class="genres-header">
+    <div>
+      <h1 class="genres-title">电子音乐曲风</h1>
+      <p class="genres-subtitle">
+        从经典 House / Techno 到前沿 Bass、氛围实验，在这里按风格探索声音的世界。
+      </p>
+    </div>
+  </header>
+
+  <!-- 搜索区域 -->
+  <form method="get" class="event-filter">
+    <input type="text" name="q" placeholder="搜索曲风名称，例如：Techno / Drum & Bass..." value="{{ query|default:'' }}">
+    <button type="submit">搜索</button>
+  </form>
+
+  <!-- 主曲风 -->
+  <section class="genre-section">
+    <header class="genre-section-header">
+      <h2>主曲风</h2>
+      <span class="genre-section-sub">电子音乐的核心流派入口</span>
+    </header>
+
+    <div class="main-genre-grid">
+      {% for genre in main_genres %}
+        <article class="main-genre-card">
+          <header class="main-genre-card-header">
+            <h3 class="main-genre-card-title">
+              <a href="{% url 'genres:detail' genre.slug %}" class="js-spa-link">
+                {{ genre.name }}
+              </a>
+            </h3>
+          </header>
+
+          {% if genre.description %}
+            <p class="main-genre-card-desc">
+              {{ genre.description|truncatechars:60 }}
+            </p>
+          {% else %}
+            <p class="main-genre-card-desc muted">
+              探索 {{ genre.name }} 的代表声音与子流派
+            </p>
+          {% endif %}
+
+          <footer class="main-genre-card-footer">
+            <span class="main-genre-card-link">
+              进入曲风 →
+            </span>
+          </footer>
+        </article>
+  {% endfor %}
+</div>
+
+  </section>
+
+  <!-- 热门曲风 -->
+  <section class="genre-section">
+    <header class="genre-section-header">
+      <h2>🔥 热门曲风</h2>
+      <span class="genre-section-sub">社区与编辑精选</span>
+    </header>
+
+    <div class="genre-grid">
+      {% for genre in hot_genres %}
+        <article class="genre-card">
+          <header class="genre-card-header">
+            <h3 class="genre-card-title">
+              <a href="{% url 'genres:detail' genre.slug %}" class="js-spa-link">
+                {{ genre.name }}
+              </a>
+            </h3>
+            <span class="genre-badge-hot">HOT</span>
+          </header>
+
+          {% if genre.short_description %}
+            <p class="genre-card-desc">{{ genre.short_description }}</p>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- 曲风列表 -->
+  <section class="genre-section">
+      <header class="genre-section-header">
+        <h2>全部曲风</h2>
+        <span class="genre-section-sub">按字母与搜索浏览全部风格</span>
+      </header>
+    {% if page_obj %}
+      <div class="genre-grid">
+        {% for genre in page_obj %}
+          <article class="genre-card">
+            <header class="genre-card-header">
+              <h2 class="genre-card-title">
+                <a href="{% url 'genres:detail' genre.slug %}" class="js-spa-link">
+                  {{ genre.name }}
+                </a>
+              </h2>
+              {% if genre.is_featured %}
+                <span class="genre-badge-hot">🔥 热门</span>
+              {% endif %}
+            </header>
+
+            {% if genre.short_description %}
+              <p class="genre-card-desc">
+                {{ genre.short_description }}
+              </p>
+            {% elif genre.description %}
+              <p class="genre-card-desc">
+                {{ genre.description|truncatechars:80 }}
+              </p>
+            {% else %}
+              <p class="genre-card-desc genre-card-desc-muted">
+                暂无简介，欢迎在社区 <span>「风格探秘」</span> 分享你的理解。
+              </p>
+            {% endif %}
+
+            <footer class="genre-card-footer">
+              <a href="{% url 'genres:detail' genre.slug %}" class="genre-card-link js-spa-link">
+                查看详情 →
+              </a>
+            </footer>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="genres-empty">暂无曲风。</p>
+    {% endif %}
+  </section>
+
+  <!-- 分页 -->
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+      <a
+        href="?page={{ page_obj.previous_page_number }}{% if query %}&amp;q={{ query }}{% endif %}"
+        class="js-spa-link"
+      >
+        上一页
+      </a>
+    {% endif %}
+
+    <span class="page-status">
+      第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页
+    </span>
+
+    {% if page_obj.has_next %}
+      <a
+        href="?page={{ page_obj.next_page_number }}{% if query %}&amp;q={{ query }}{% endif %}"
+        class="js-spa-link"
+      >
+        下一页
+      </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

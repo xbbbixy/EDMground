@@ -1,0 +1,671 @@
+/* ======================
+   通用：曲风页面布局
+   ====================== */
+
+.genres-page,
+.genre-detail-page {
+  padding: 30px 0 50px;
+}
+
+/* 顶部标题区域（列表页） */
+.genres-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.genres-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.1rem;
+  margin-bottom: 6px;
+}
+
+.genres-subtitle {
+  color: #aaa;
+  font-size: 0.98rem;
+}
+
+/* 搜索区域 */
+.genres-search-section {
+  margin-bottom: 24px;
+}
+
+.genres-search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.genres-search-input {
+  flex: 1;
+  min-width: 220px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid #333;
+  background: #111;
+  color: #eee;
+  outline: none;
+}
+
+.genres-search-input:focus {
+  border-color: #00f0ff;
+}
+
+/* 按钮统一风格可以复用主站的 .btn-primary，这里兜底一份 */
+.btn-primary {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid #00f0ff;
+  background: linear-gradient(135deg, #00f0ff, #0077ff);
+  color: #000;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+/* ======================
+   曲风列表：卡片栅格
+   ====================== */
+
+.genres-list-section {
+  margin-top: 10px;
+}
+
+.genres-page .genre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+.genres-page .genre-card {
+  background: #101019;
+  border-radius: 16px;
+  padding: 16px 18px;
+  border: 1px solid #222;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.genres-page .genre-card:hover {
+  border-color: #ff00aa;
+  box-shadow: 0 0 18px rgba(255, 0, 170, 0.35);
+  transform: translateY(-2px);
+}
+
+.genre-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.genre-card-title {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.genre-card-title a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.genre-card-title a:hover {
+  color: #00f0ff;
+}
+
+.genre-badge-hot {
+  font-size: 0.78rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 120, 0, 0.8);
+  background: rgba(255, 120, 0, 0.1);
+  color: #ffb84d;
+  white-space: nowrap;
+}
+
+.genre-card-desc {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 12px;
+}
+
+.genre-card-desc-muted {
+  color: #777;
+}
+
+.genre-card-desc span {
+  color: #ff00aa;
+}
+
+.genre-card-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.genre-card-link {
+  font-size: 0.9rem;
+  color: #00f0ff;
+  text-decoration: none;
+}
+
+.genre-card-link:hover {
+  text-decoration: underline;
+}
+
+/* ======================
+   曲风详情页：Hero 部分
+   ====================== */
+
+.genre-hero {
+  padding: 20px 22px;
+  margin-bottom: 28px;
+  border-radius: 18px;
+  border: 1px solid #222;
+  background: radial-gradient(circle at top left, rgba(255, 0, 170, 0.18), transparent 55%),
+              radial-gradient(circle at bottom right, rgba(0, 240, 255, 0.18), transparent 55%),
+              #060612;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.7);
+}
+
+.genre-hero-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.genre-badge-parent {
+  font-size: 0.82rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid #333;
+  background: rgba(0, 0, 0, 0.4);
+  color: #bbb;
+}
+
+.genre-badge-parent a {
+  color: #00f0ff;
+  text-decoration: none;
+}
+
+.genre-badge-parent a:hover {
+  text-decoration: underline;
+}
+
+.genre-hero-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  margin: 4px 0 10px;
+}
+
+.genre-hero-desc {
+  color: #ddd;
+  line-height: 1.6;
+  font-size: 0.96rem;
+}
+
+.genre-hero-desc-muted {
+  color: #888;
+}
+
+/* 子流派标签区域 */
+.genre-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.genre-tags-label {
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+.genre-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.genre-tag {
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #444;
+  background: rgba(0, 0, 0, 0.6);
+  color: #eee;
+  text-decoration: none;
+}
+
+.genre-tag:hover {
+  border-color: #ff00aa;
+  color: #ffb3e6;
+}
+
+/* ======================
+   Section 通用
+   ====================== */
+
+.genres-page .genre-section {
+  margin-bottom: 32px;
+}
+
+.genres-page .genre-section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.genre-section-header h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.4rem;
+}
+
+.genres-page .genre-section-sub {
+  font-size: 0.88rem;
+  color: #999;
+}
+
+/* =====================================================
+   曲风详情页 · 歌曲条样式（对齐艺术家详情页）
+   仅作用于 .genre-detail-page
+===================================================== */
+
+/* 列表间距 */
+.genre-detail-page .track-list {
+  gap: 16px;
+}
+
+/* 单条歌曲卡片 */
+.genre-detail-page .track-card {
+  padding: 16px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  backdrop-filter: blur(5px);
+
+  border: none;                 /* 去掉 genre 原有的硬边框 */
+  box-shadow: none;
+
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+  margin:15px 0px 15px 0px;
+}
+
+.genre-detail-page .track-card:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* 主信息区 */
+.genre-detail-page .track-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 标题 */
+.genre-detail-page .track-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin: 5px 0px 10px 0px;
+}
+
+/* 艺术家 */
+.genre-detail-page .track-artists {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* 曲风标签（保持你原有的 pill，但位置更合理） */
+.genre-detail-page .track-genres {
+  margin-top: 8px;
+}
+
+.genre-detail-page .track-genres .track-genre-pill{
+  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #cfd6ff;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+/* 操作区：对齐艺术家页 */
+.genre-detail-page .track-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 圆形按钮（播放 / 插播 / 收藏） */
+.genre-detail-page .track-actions .btn-play,
+.genre-detail-page .track-actions .btn-queue,
+.genre-detail-page .track-actions .btn-fav-playlist {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #fff;
+  background: rgba(255,255,255,0.18);
+  transition: background .2s ease, transform .2s ease;
+}
+
+.genre-detail-page .track-actions .btn-play:hover,
+.genre-detail-page .track-actions .btn-queue:hover,
+.genre-detail-page .track-actions .btn-fav-playlist:hover {
+  background: rgba(255,255,255,0.32);
+  transform: scale(1.05);
+}
+
+/* 已收藏状态（统一收藏高亮） */
+.genre-detail-page .track-actions .btn-fav-playlist.is-added {
+  background: linear-gradient(135deg, #ff5c9a, #ff3767);
+  color: #fff;
+}
+
+/* ======================
+   相关艺术家区块
+   ====================== */
+
+.genre-artist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 18px;
+}
+
+.genre-artist-card {
+  background: #101018;
+  border-radius: 14px;
+  border: 1px solid #222;
+  padding: 10px 10px 12px;
+  margin-top:20px;
+  text-align: center;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.genre-artist-card:hover {
+  border-color: #00f0ff;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.genre-artist-avatar {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 6px;
+}
+
+.genre-artist-avatar.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #222;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.genre-artist-info {
+  margin-top: 4px;
+}
+
+.genre-artist-name {
+  display: inline-block;
+  font-size: 0.95rem;
+  color: #eee;
+  text-decoration: none;
+}
+
+.genre-artist-name:hover {
+  color: #00f0ff;
+}
+
+.genre-artist-country {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+/* ======================
+   分页 & 空态
+   ====================== */
+
+.pagination {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.page-link {
+  font-size: 0.9rem;
+  color: #00f0ff;
+  text-decoration: none;
+  border: 1px solid #00f0ff;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.page-link:hover {
+  background: rgba(0, 240, 255, 0.12);
+}
+
+.page-status {
+  font-size: 0.88rem;
+  color: #aaa;
+}
+
+.genres-empty {
+  margin-top: 10px;
+  color: #888;
+}
+
+/* ======================
+   响应式处理
+   ====================== */
+
+@media (max-width: 768px) {
+  .genres-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .genre-hero {
+    padding: 16px;
+  }
+
+  .track-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .track-actions {
+    min-width: 0;
+    align-items: stretch;
+  }
+}
+/* ======================
+   曲风详情 x 社区联动
+   ====================== */
+
+.genre-community-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.genre-community-card {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #222;
+  background: #080812;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+}
+
+.genre-community-title {
+  font-size: 1rem;
+  margin: 0 0 4px;
+}
+
+.genre-community-title a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.genre-community-title a:hover {
+  color: #00f0ff;
+}
+
+.genre-community-meta {
+  font-size: 0.82rem;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.genre-community-excerpt {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.genre-community-more {
+  margin-top: 10px;
+}
+
+/* ======================
+   主曲风卡片
+   ====================== */
+
+.genres-page .main-genre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 22px;
+  margin-top: 14px;
+}
+
+.genres-page .main-genre-card {
+  position: relative;
+  padding: 18px 20px;
+  border-radius: 20px;
+
+  background:
+    radial-gradient(circle at top right,
+      rgba(0, 240, 255, 0.18),
+      transparent 55%),
+    radial-gradient(circle at bottom left,
+      rgba(255, 0, 170, 0.18),
+      transparent 55%),
+    #0b0b14;
+
+  border: 1px solid #222;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.55);
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.genres-page .main-genre-card:hover {
+  transform: translateY(-4px);
+  border-color: #00f0ff;
+  box-shadow: 0 0 22px rgba(0, 240, 255, 0.35);
+}
+
+/* 标题 */
+
+.genres-page .main-genre-card-title {
+  margin: 0 0 6px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.25rem;
+}
+
+.main-genre-card-title a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.main-genre-card-title a:hover {
+  color: #00f0ff;
+}
+
+/* 描述 */
+
+.main-genre-card-desc {
+  font-size: 0.9rem;
+  color: #ccc;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.main-genre-card-desc.muted {
+  color: #777;
+}
+
+/* 底部 */
+
+.main-genre-card-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.main-genre-card-link {
+  font-size: 0.9rem;
+  color: #ff66cc;
+  letter-spacing: 0.03em;
+}
+
+/* 曲目操作按钮（播放 / 插播） */
+.track-actions-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.btn-play,
+.btn-queue {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s, transform .2s;
+}
+
+.btn-play {
+  color: #000;
+}
+
+.btn-play:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.btn-queue {
+  background: #15151f;
+  color: #ddd;
+  border: 1px solid #444;
+}
+
+.btn-queue:hover {
+  border-color: #00f0ff;
+  color: #00f0ff;
+}
+

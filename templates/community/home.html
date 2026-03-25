@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}社区 - EDMground{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/community.css' %}" data-page-css>
+{% endblock %}
+{% block content %}
+<div class="community-page container">
+  <h1>社区</h1>
+
+    <div class="community-layout">
+
+      <!-- 主内容：帖子流 -->
+      <div class="community-main">
+        <h2 class="section-title">🔥 社区精选帖子</h2>
+
+        <div class="post-stream">
+          {% for post in featured_posts %}
+            <article class="post-stream-card">
+              <h3>
+                <a href="{{ post.get_absolute_url }}" class="post-title js-spa-link">
+                  {{ post.title }}
+                </a>
+              </h3>
+
+              <p class="post-meta">
+                {{ post.author.username }} · {{ post.created_at|date:"Y-m-d" }}
+                · ❤ {{ post.likes_count }} · 💬 {{ post.comments_count }}
+              </p>
+
+              <p class="post-excerpt">
+                {{ post.content|truncatechars:120 }}
+              </p>
+
+              <div class="post-footer">
+                <a href="{% url 'community:category' post.category.slug %}" class="post-tag">
+                  {{ post.category.name }}
+                </a>
+              </div>
+            </article>
+          {% empty %}
+            <p class="muted">暂无帖子</p>
+          {% endfor %}
+        </div>
+
+        <!-- 全部帖子 -->
+        <h2 class="section-title" style="margin-top: 40px;">所有帖子</h2>
+        <div class="post-stream">
+          {% for post in page_obj %}
+            <article class="post-stream-card">
+              <h3>
+                <a href="{{ post.get_absolute_url }}" class="post-title js-spa-link">
+                  {{ post.title }}
+                </a>
+              </h3>
+              <p class="post-meta">
+                {{ post.author.username }} · {{ post.created_at|date:"Y-m-d" }}
+                · ❤ {{ post.likes_count }} · 💬 {{ post.comments_count }}
+              </p>
+              <p class="post-excerpt">
+                {{ post.content|truncatechars:120 }}
+              </p>
+              <div class="post-footer">
+                <a href="{% url 'community:category' post.category.slug %}" class="post-tag">
+                  {{ post.category.name }}
+                </a>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+
+        <!-- 分页 -->
+        {% if page_obj.has_other_pages %}
+          <div class="pagination">
+            {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}" class="js-spa-link">上一页</a>
+            {% endif %}
+
+            <span class="page-status">
+              第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页
+            </span>
+
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}" class="js-spa-link">下一页</a>
+            {% endif %}
+          </div>
+        {% endif %}
+
+      </div>
+
+      <!-- 侧栏：板块 + 热门 -->
+      <aside class="community-sidebar">
+
+        <div class="sidebar-block">
+          <h3>🧭 讨论板块</h3>
+          <div class="category-list">
+            {% for cat in categories %}
+              <a href="{% url 'community:category' cat.slug %}"
+                 class="category-pill js-spa-link">
+                {{ cat.name }}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="sidebar-block">
+          <h3>🔥 热门帖子</h3>
+          <ul>
+            {% for p in hot_posts %}
+              <li>
+                <a href="{{ p.get_absolute_url }}" class="js-spa-link">
+                  {{ p.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        {% if user.is_authenticated %}
+        <div class="sidebar-block">
+          <a href="{% url 'community:post_create' %}" class="btn-primary">
+            + 发表新帖
+          </a>
+        </div>
+        {% endif %}
+
+      </aside>
+    </div>
+
+</div>
+{% endblock %}

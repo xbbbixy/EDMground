@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ genre.name }} - 曲风{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/genre.css' %}" data-page-css>
+{% endblock %}
+
+{% block content %}
+<div class="page-container genre-detail-page">
+
+  <!-- 顶部 Genre 信息 -->
+  <section class="genre-hero">
+    <div class="genre-hero-badge-row">
+      {% if genre.is_featured %}
+        <span class="genre-badge-hot">🔥 热门曲风</span>
+      {% endif %}
+      {% if genre.parent %}
+        <span class="genre-badge-parent">
+          隶属于：
+          <a href="{% url 'genres:detail' genre.parent.slug %}" class="js-spa-link">
+            {{ genre.parent.name }}
+          </a>
+        </span>
+      {% endif %}
+    </div>
+
+    <h1 class="genre-hero-title">{{ genre.name }}</h1>
+
+    {% if genre.description %}
+      <p class="genre-hero-desc">
+        {{ genre.description|linebreaksbr }}
+      </p>
+    {% else %}
+      <p class="genre-hero-desc genre-hero-desc-muted">
+        该曲风暂时没有详细介绍，欢迎在社区「风格探秘」分享你的理解与推荐。
+      </p>
+    {% endif %}
+
+    {% if subgenres %}
+      <div class="genre-tags-row">
+        <span class="genre-tags-label">子流派：</span>
+        <div class="genre-tags">
+          {% for sg in subgenres %}
+            <a href="{% url 'genres:detail' sg.slug %}" class="genre-tag js-spa-link">
+              {{ sg.name }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- 代表作品 -->
+  <section class="genre-section">
+    <header class="genre-section-header">
+      <h2>代表作品</h2>
+      <span class="genre-section-sub">
+        精选 {{ page_obj.paginator.count }} 首该风格相关曲目
+      </span>
+    </header>
+
+    {% if page_obj %}
+      <div class="track-list">
+        {% for t in page_obj %}
+          <article class="track-card">
+            <div class="track-main">
+              <div class="track-title-line">
+                <h3 class="track-title">{{ t.title }}</h3>
+              </div>
+
+              <div class="track-artists">
+                {% if t.artists.all %}
+                  {% for a in t.artists.all %}
+                    <a href="{% url 'artists:detail' a.id %}" class="track-artist js-spa-link">
+                      {{ a.name }}
+                    </a>{% if not forloop.last %}<span class="track-sep">·</span>{% endif %}
+                  {% endfor %}
+                {% endif %}
+              </div>
+
+              {% if t.genres.all %}
+                <div class="track-genres">
+                  {% for g in t.genres.all %}
+                    <a
+                      href="{% url 'genres:detail' g.slug %}"
+                      class="track-genre-pill js-spa-link"
+                    >
+                      {{ g.name }}
+                    </a>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="track-actions">
+              {% if t.audio_file %}
+                  <div class="track-actions-buttons">
+                    <!-- ▶ 立即播放 -->
+                    <button
+                      class="btn-play js-add-to-player"
+                      data-autoplay="true"
+                      data-track-id="{{ t.id }}"
+                      data-title="{{ t.title }}"
+                      data-artists="{% for a in t.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                      data-audio="{{ t.audio_file.url }}"
+                      data-cover=""
+                      data-genres="{% for g in t.genres.all %}{{ g.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                    >
+                      ▶
+                    </button>
+
+                    <!-- ＋ 插播 -->
+                    <button
+                      class="btn-queue js-add-to-player"
+                      data-autoplay="false"
+                      data-track-id="{{ t.id }}"
+                      data-title="{{ t.title }}"
+                      data-artists="{% for a in t.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                      data-audio="{{ t.audio_file.url }}"
+                      data-cover=""
+                      data-genres="{% for g in t.genres.all %}{{ g.slug }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                    >
+                      ＋
+                    </button>
+
+                    <!-- ❤ 收藏 -->
+                    <button
+                      class="btn-fav-playlist js-fav-playlist {% if t.id in playlist_track_ids %}is-added{% endif %}"
+                      data-track-id="{{ t.id }}"
+                      title="收藏到歌单"
+                    >❤</button>
+                  </div>
+                {% else %}
+                  <span class="track-no-audio">暂无音频文件</span>
+                {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="genres-empty">暂无曲目。</p>
+    {% endif %}
+
+    <!-- 分页 -->
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">上一页</a>
+      {% endif %}
+      <span class="page-status">
+        第 {{ page_obj.number }} / 共 {{ page_obj.paginator.num_pages }} 页
+      </span>
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link">下一页</a>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- 相关艺术家 -->
+  <section class="genre-section">
+    <header class="genre-section-header">
+      <h2>相关艺术家</h2>
+      <span class="genre-section-sub">
+        与 {{ genre.name }} 紧密相关的代表创作者
+      </span>
+    </header>
+
+    {% if artists %}
+      <div class="genre-artist-grid">
+        {% for a in artists %}
+          <article class="genre-artist-card">
+            <a href="{% url 'artists:detail' a.id %}" class="js-spa-link">
+              {% if a.avatar %}
+                <img src="{{ a.avatar.url }}" alt="{{ a.name }}" class="genre-artist-avatar">
+              {% else %}
+                <div class="genre-artist-avatar placeholder">
+                  {{ a.name|slice:":1" }}
+                </div>
+              {% endif %}
+            </a>
+            <div class="genre-artist-info">
+              <a href="{% url 'artists:detail' a.id %}" class="genre-artist-name js-spa-link">
+                {{ a.name }}
+              </a>
+              {% if a.country %}
+                <p class="genre-artist-country">{{ a.country }}</p>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="genres-empty">暂无已关联的艺术家。</p>
+    {% endif %}
+  </section>
+    {# ✅ 新增：社区「风格探秘」里的相关讨论 #}
+  <section class="genre-section">
+    <header class="genre-section-header">
+      <h2>来自社区「风格探秘」的讨论</h2>
+      <span class="genre-section-sub">
+        正在讨论 {{ genre.name }} 的帖子
+      </span>
+    </header>
+
+    {% if community_posts %}
+      <div class="genre-community-list">
+        {% for p in community_posts %}
+          <article class="genre-community-card">
+            <h3 class="genre-community-title">
+              <a href="{{ p.get_absolute_url }}" class="js-spa-link">
+                {{ p.title }}
+              </a>
+            </h3>
+            <p class="genre-community-meta">
+              {{ p.author.username }} · {{ p.created_at|date:"Y-m-d H:i" }} ·
+              ❤ {{ p.likes_count }} · 💬 {{ p.comments_count }}
+            </p>
+            <p class="genre-community-excerpt">
+              {{ p.content|truncatechars:100 }}
+            </p>
+          </article>
+        {% endfor %}
+      </div>
+
+      <div class="genre-community-more">
+        <a href="{% url 'community:category' 'genres' %}" class="page-link js-spa-link">
+          更多「风格探秘」讨论 →
+        </a>
+      </div>
+    {% else %}
+      <p class="genres-empty">
+        目前还没有关于该曲风的社区讨论，欢迎前往
+        <a href="{% url 'community:category' 'genres' %}" class="js-spa-link">「风格探秘」</a>
+        发起一帖。
+      </p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

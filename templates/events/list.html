@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}活动 - EDMground{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/event.css' %}" data-page-css>
+<link rel="stylesheet" href="{% static 'css/home.css' %}" data-page-css>
+{% endblock %}
+
+{% block content %}
+<section class="events-page">
+
+  <h2 class="page-title">活动与演出</h2>
+
+  <!-- 筛选 -->
+  <form method="get" class="event-filter">
+    <input type="text" name="q" placeholder="搜索活动…" value="{{ q }}">
+    <input type="text" name="city" placeholder="城市" value="{{ city }}">
+
+    <select name="genre">
+      <option value="">所有曲风</option>
+      {% for g in genres %}
+        <option value="{{ g.slug }}" {% if genre_slug == g.slug %}selected{% endif %}>
+          {{ g.name }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <select name="date">
+      <option value="upcoming" {% if date == 'upcoming' %}selected{% endif %}>即将开始</option>
+      <option value="recent" {% if date == 'recent' %}selected{% endif %}>最新发布</option>
+    </select>
+
+    <button type="submit">筛选</button>
+  </form>
+
+  <!-- 热门活动轮播 -->
+  <div class="carousel-wrapper">
+
+  <button class="carousel-btn prev" aria-label="向左滚动">‹</button>
+
+  <section class="event-carousel home-carousel">
+    {% for e in carousel_events %}
+      <a href="{% url 'events:detail' e.id %}" class="event-card js-spa-link">
+        {% if e.poster %}
+          <img src="{{ e.poster.url }}" class="lightbox-trigger">
+        {% endif %}
+        <div class="event-info">
+          <h4 class="event-title">{{ e.title }}</h4>
+          <p class="event-meta">{{ e.city }} · {{ e.start_time|date:"Y-m-d" }}</p>
+        </div>
+      </a>
+    {% endfor %}
+  </section>
+
+  <button class="carousel-btn next" aria-label="向右滚动">›</button>
+
+</div>
+
+
+  <!-- 活动列表 -->
+  <div class="event-grid">
+    {% for event in page_obj %}
+      <a href="{% url 'events:detail' event.id %}" class="event-card js-spa-link">
+        {% if event.poster %}
+          <img src="{{ event.poster.url }}" class="lightbox-trigger">
+        {% endif %}
+        <div class="event-info">
+          <h3>{{ event.title }}</h3>
+          <p class="event-meta">{{ event.city }} · {{ event.start_time|date:"Y-m-d" }} - {{ event.end_time|date:"Y-m-d" }}</p>
+        </div>
+      </a>
+    {% empty %}
+      <p class="muted">暂无活动</p>
+    {% endfor %}
+  </div>
+
+  <!-- 分页 -->
+  {% if page_obj.has_other_pages %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&q={{ q }}&city={{ city }}&genre={{ genre_slug }}" class="js-spa-link">
+          上一页
+        </a>
+      {% endif %}
+
+      <span class="page-status">
+        第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页
+      </span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&q={{ q }}&city={{ city }}&genre={{ genre_slug }}" class="js-spa-link">
+          下一页
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+</section>
+{% endblock %}

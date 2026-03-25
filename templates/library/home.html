@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}曲库{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/library.css' %}" data-page-css>
+<link rel="stylesheet" href="{% static 'css/event.css' %}">
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/library.js' %}" data-page-js></script>
+{% endblock %}
+
+{% block content %}
+<div class="library-page">
+
+  <h2 class="page-title">曲库</h2>
+
+  <!-- 搜索栏 -->
+  <form method="get" class="event-filter">
+    <input type="text" name="q" placeholder="搜索歌曲 / 艺术家 / 专辑 / 曲风" value="{{ q }}">
+    <button type="submit">搜索</button>
+  </form>
+
+  <!-- 热门歌曲 -->
+  <section class="library-hot">
+    <div class="section-header">
+      <h2 class="section-title">🔥 热门歌曲</h2>
+
+      <div class="scroll-controls">
+        <button class="scroll-btn" data-target="#hotTrackRow" data-dir="left">‹</button>
+        <button class="scroll-btn" data-target="#hotTrackRow" data-dir="right">›</button>
+      </div>
+    </div>
+
+    <div class="hot-track-row" id="hotTrackRow">
+      {% for track in hot_tracks %}
+        <div class="hot-track-card">
+
+          <div class="hot-track-cover">
+            {% if track.cover %}
+              <img src="{{ track.cover.url }}" alt="{{ track.title }}">
+            {% else %}
+              <div class="cover-placeholder">🎵</div>
+            {% endif %}
+
+            <div class="hot-track-actions">
+              <button
+                  class="btn-play js-add-to-player"
+                  data-track-id="{{ track.id }}"
+                  data-title="{{ track.title }}"
+                  data-artists="{% for a in track.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                  data-audio="{{ track.audio_file.url }}"
+                  data-cover="{% if track.cover %}{{ track.cover.url }}{% endif %}"
+                  data-genres="{% for g in track.genres.all %}{{ g.slug }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                  ▶
+                </button>
+
+                <button
+                      class="btn-queue js-add-to-player"
+                      data-autoplay="false"
+                      data-track-id="{{ track.id }}"
+                      data-title="{{ track.title }}"
+                      data-artists="{% for a in track.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                      data-audio="{{ track.audio_file.url }}"
+                      data-cover="{% if track.cover %}{{ track.cover.url }}{% endif %}"
+                      data-genres="{% for g in track.genres.all %}{{ g.slug }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                      ＋
+                    </button>
+            </div>
+          </div>
+
+          <div class="hot-track-info">
+            <div class="hot-track-title">{{ track.title }}</div>
+            <div class="hot-track-artist">
+              {% for artist in track.artists.all %}
+                <a href="{{ artist.get_absolute_url }}">{{ artist.name }}</a>{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- 热门专辑 -->
+  <section class="library-hot">
+    <h2 class="section-title">💿 热门专辑</h2>
+
+    <div class="hot-album-row">
+      {% for album in hot_albums %}
+        <a href="{{ album.get_absolute_url }}" class="hot-album-card js-spa-link">
+          <div class="hot-album-cover">
+            {% if album.cover %}
+              <img src="{{ album.cover.url }}" alt="{{ album.title }}">
+            {% else %}
+              <div class="cover-placeholder">💿</div>
+            {% endif %}
+          </div>
+          <div class="hot-album-title">{{ album.title }}</div>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- Tab 导航 -->
+  <div class="artist-section-tabs">
+    <a href="{% url 'artists:library_home' %}?tab=tracks&q={{ q }}" 
+       class="section-tab js-spa-link {% if active_tab == 'tracks' %}active{% endif %}">
+      全部音乐
+    </a>
+    <a href="{% url 'artists:library_home' %}?tab=albums&q={{ q }}" 
+       class="section-tab js-spa-link {% if active_tab == 'albums' %}active{% endif %}">
+      全部专辑
+    </a>
+  </div>
+
+  <!-- 内容展示 -->
+  <section class="library-main-content">
+    {% if active_tab == 'tracks' %}
+      <div class="track-grid">
+        {% for track in page_obj %}
+          <div class="track-card">
+
+            <div class="track-cover">
+              {% if track.cover %}
+                <img src="{{ track.cover.url }}" alt="{{ track.title }}">
+              {% else %}
+                <div class="cover-placeholder">🎵</div>
+              {% endif %}
+
+              <div class="track-hover-actions">
+                <button
+                    class="btn-play js-add-to-player"
+                    data-track-id="{{ track.id }}"
+                    data-title="{{ track.title }}"
+                    data-artists="{% for a in track.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                    data-audio="{{ track.audio_file.url }}"
+                    data-cover="{% if track.cover %}{{ track.cover.url }}{% endif %}"
+                    data-genres="{% for g in track.genres.all %}{{ g.slug }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                    ▶
+                  </button>
+
+
+                  <button
+                    class="btn-queue js-add-to-player"
+                    data-autoplay="false"
+                    data-track-id="{{ track.id }}"
+                    data-title="{{ track.title }}"
+                    data-artists="{% for a in track.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+                    data-audio="{{ track.audio_file.url }}"
+                    data-cover="{% if track.cover %}{{ track.cover.url }}{% endif %}"
+                    data-genres="{% for g in track.genres.all %}{{ g.slug }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                    ＋
+                  </button>
+
+                  <button
+                    class="btn-fav-playlist js-fav-playlist {% if track.id in playlist_track_ids %}is-added{% endif %}"
+                    data-track-id="{{ track.id }}"
+                    title="收藏到歌单">
+                    ❤
+                  </button>
+
+              </div>
+            </div>
+
+            <div class="track-info">
+              <h3 class="track-title">{{ track.title }}</h3>
+
+              <div class="track-artists">
+                {% for artist in track.artists.all %}
+                  <a href="{{ artist.get_absolute_url }}">{{ artist.name }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </div>
+
+              <div class="track-album">
+                {% if track.album %}
+                  <a href="{{ track.album.get_absolute_url }}">{{ track.album.title }}</a>
+                {% else %}
+                  <span class="album-virtual">{{ track.get_album_title }}</span>
+                {% endif %}
+              </div>
+
+              <div class="track-genres">
+                {% for genre in track.genres.all %}
+                  <a href="{% url 'genres:detail' genre.slug %}" class="genre-pill">
+                    {{ genre.name }}
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+
+          </div>
+        {% empty %}
+          <p class="empty">暂无歌曲</p>
+        {% endfor %}
+      </div>
+
+    {% elif active_tab == 'albums' %}
+      <div class="album-grid">
+        {% for album in page_obj %}
+          <div class="album-card">
+            <a href="{{ album.get_absolute_url }}" class="js-spa-link album-cover-link">
+              <div class="album-cover">
+                {% if album.cover %}
+                  <img src="{{ album.cover.url }}" alt="{{ album.title }}">
+                {% else %}
+                  <div class="cover-placeholder">💿</div>
+                {% endif %}
+              </div>
+            </a>
+            <div class="album-info">
+              <h3 class="album-title">
+                <a href="{{ album.get_absolute_url }}" class="js-spa-link">{{ album.title }}</a>
+              </h3>
+              <div class="album-artists">
+                {% for artist in album.artists.all %}
+                  <a href="{{ artist.get_absolute_url }}" class="js-spa-link">{{ artist.name }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <p class="empty">暂无专辑</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </section>
+
+  {% if page_obj.has_other_pages %}
+    <div class="pagination">
+
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&q={{ q }}&tab={{ active_tab }}" class="js-spa-link">上一页</a>
+      {% endif %}
+
+      <span class="page-status">
+        第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页
+      </span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&q={{ q }}&tab={{ active_tab }}" class="js-spa-link">下一页</a>
+      {% endif %}
+
+    </div>
+  {% endif %}
+
+
+</div>
+{% endblock %}

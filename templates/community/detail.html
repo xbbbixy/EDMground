@@ -1,0 +1,303 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ post.title }} - 社区{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/community.css' %}" data-page-css>
+<link rel="stylesheet" href="{% static 'css/genre.css' %}">
+{% endblock %}
+{% block content %}
+<div class="post-page  container">
+  <article class="post-detail">
+    <h1>{{ post.title }}</h1>
+    <div class="post-meta">
+        <div class="author-info">
+            {% if post.author.profile.avatar %}
+                <img src="{{ post.author.profile.avatar.url }}" alt="{{ post.author.username }}'s avatar" class="author-avatar">
+            {% else %}
+                <div class="avatar-placeholder author-avatar">🎧</div>
+            {% endif %}
+            <a href="{% url 'users:profile' post.author.id %}" class="js-spa-link">
+              <span class="author-name">{{ post.author.username }}</span>
+            </a>
+        </div>
+
+        <span class="meta-dot">·</span>
+        <span class="meta-item">{{ post.created_at|date:"Y-m-d H:i" }}</span>
+        <span class="meta-dot">·</span>
+        <span class="meta-item"><a href="{% url 'community:category' post.category.slug %}" class="js-spa-link">{{ post.category.name }}</a></span>
+
+        {% if post.genre %}
+            <span class="meta-dot">·</span>
+            <a href="{% url 'genres:detail' post.genre.slug %}" class="js-spa-link post-genre-btn">
+                {{ post.genre.name }}
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="post-content">
+      {{ post.content|linebreaks }}
+    </div>
+
+    <div class="post-attachments">
+          {% if post.image %}
+            <div class="attachment-block">
+              <h3>图片</h3>
+              <img src="{{ post.image.url }}" alt="post image" class="post-image">
+            </div>
+          {% endif %}
+
+          {% if post.audio %}
+            <div class="attachment-block">
+              <h3>音频</h3>
+              <audio controls src="{{ post.audio.url }}" class="post-audio"></audio>
+            </div>
+          {% endif %}
+
+          {% if post.video %}
+            <div class="attachment-block">
+              <h3>视频</h3>
+              <video controls src="{{ post.video.url }}" class="post-video"></video>
+            </div>
+          {% endif %}
+        </div>
+
+    <div class="post-actions">
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'community:toggle_like' post.id %}" class="like-form" data-ajax="1">
+          {% csrf_token %}
+          <button type="button" class="btn-like" id="likeBtn">
+              <span id="likeText">
+                {% if is_liked %}取消点赞{% else %}点赞{% endif %}
+              </span>
+              ❤
+              <span id="likeCount">{{ post.likes_count }}</span>
+            </button>
+        </form>
+      {% else %}
+        <span>❤ {{ post.likes_count }}</span>
+      {% endif %}
+    </div>
+  </article>
+
+  <section class="comments-section">
+    <h2>评论</h2>
+
+    {% if user.is_authenticated %}
+      <div class="comment-form">
+        <h3>发表评论</h3>
+        <form id="commentForm" method="post" action="{% url 'community:add_comment' post.id %}">
+          {% csrf_token %}
+          <textarea name="content" rows="4" placeholder="说点什么吧..." required></textarea>
+          <div class="form-actions main-form-actions">
+            <button type="submit" class="btn-primary">发送</button>
+          </div>
+        </form>
+
+      </div>
+    {% else %}
+      <p class="login-prompt">请先<a href="{% url 'users:login' %}?next={{ request.path }}">登录</a>以参与讨论。</p>
+    {% endif %}
+
+    <div id="commentList">
+        {% if comments %}
+            {% include "community/_comment_thread.html" with comments=comments %}
+        {% else %}
+            <p class="empty-comments">还没有评论。</p>
+        {% endif %}
+    </div>
+  </section>
+</div>
+
+{% block extra_scripts %}
+<script>
+(function () {
+  // 防止脚本被执行多次
+  if (window.__LIKE_INITED__) return;
+  window.__LIKE_INITED__ = true;
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const likeBtn = document.getElementById('likeBtn');
+    const likeText = document.getElementById('likeText');
+    const likeCount = document.getElementById('likeCount');
+
+    if (!likeBtn || !likeText || !likeCount) return;
+
+    let loading = false;
+
+    likeBtn.addEventListener('click', function () {
+      if (loading) return;
+      loading = true;
+
+      fetch("{% url 'community:toggle_like' post.id %}", {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      })
+        .then(res => res.json())
+        .then(data => {
+          likeText.innerText = data.liked ? '取消点赞' : '点赞';
+          likeCount.innerText = data.likes_count;
+        })
+        .catch(() => {
+          alert('操作失败，请稍后重试');
+        })
+        .finally(() => {
+          // 给一个极短的缓冲，避免极快连点
+          setTimeout(() => {
+            loading = false;
+          }, 150);
+        });
+    });
+  });
+})();
+(function () {
+  // ⭐ 防止评论脚本被重复初始化
+  if (window.__COMMENT_REPLY_INITED__) return;
+  window.__COMMENT_REPLY_INITED__ = true;
+
+  const commentSection = document.querySelector('.comments-section');
+  if (!commentSection) return;
+  
+  const csrfToken = '{{ csrf_token }}';
+  const postUrl = "{% url 'community:add_comment' post.id %}";
+
+  // 创建评论元素的辅助函数
+  const createCommentElement = (data) => {
+    const threadDiv = document.createElement('div');
+    threadDiv.className = 'comment-thread';
+
+    let avatarHtml = `<div class="avatar-placeholder author-avatar">🎧</div>`;
+    if (data.author.avatar_url) {
+      avatarHtml = `<img src="${data.author.avatar_url}" alt="${data.author.username}'s avatar" class="author-avatar">`;
+    }
+
+    // 确保这里的结构与 _comment_thread.html 一致
+    threadDiv.innerHTML = `
+      <div class="comment" id="comment-${data.id}">
+        <div class="comment-avatar">
+          ${avatarHtml}
+        </div>
+        <div class="comment-body">
+          <p class="comment-meta">
+            <a href="/users/profile/${data.author.id}/" class="js-spa-link">${data.author.username}</a>
+             · ${data.created_at}
+          </p>
+          <div class="comment-content"><p>${data.content.replace(/\n/g, '<br>')}</p></div>
+          <div class="comment-actions">
+            <button class="btn-reply js-reply-btn" data-comment-id="${data.id}">回复</button>
+          </div>
+          <div class="reply-form-container" id="reply-form-${data.id}" style="display: none;">
+             <form class="comment-form reply-form" method="post" action="${postUrl}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                <input type="hidden" name="parent_id" value="${data.id}">
+                <textarea name="content" rows="2" placeholder="回复 @${data.author.username}..." required></textarea>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">提交回复</button>
+                    <button type="button" class="btn-secondary js-cancel-reply" data-comment-id="${data.id}">取消</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    `;
+    return threadDiv;
+  };
+
+  commentSection.addEventListener('click', function(e) {
+    // 处理 "回复" 按钮点击
+    if (e.target.matches('.js-reply-btn')) {
+      const commentId = e.target.dataset.commentId;
+      const formContainer = document.getElementById(`reply-form-${commentId}`);
+      if (formContainer) {
+        // 先隐藏所有其他回复表单
+        document.querySelectorAll('.reply-form-container').forEach(f => {
+            if (f.id !== `reply-form-${commentId}` ) {
+               f.style.display = 'none';
+            }
+        });
+        // 切换当前表单的显示状态
+        formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+        if (formContainer.style.display === 'block') {
+            formContainer.querySelector('textarea').focus();
+        }
+      }
+    }
+
+    // 处理 "取消" 按钮点击
+    if (e.target.matches('.js-cancel-reply')) {
+      const commentId = e.target.dataset.commentId;
+      const formContainer = document.getElementById(`reply-form-${commentId}`);
+      if (formContainer) {
+        formContainer.style.display = 'none';
+      }
+    }
+  });
+
+  commentSection.addEventListener('submit', function(e) {
+    // 处理所有评论表单提交 (主表单和回复表单)
+    if (e.target.matches('.comment-form')) {
+      e.preventDefault();
+      const form = e.target;
+      const textarea = form.querySelector('textarea');
+      const content = textarea.value.trim();
+      if (!content) return;
+
+      const formData = new FormData(form);
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.textContent = '发送中...';
+
+
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: new URLSearchParams(formData)
+      })
+      .then(res => {
+          if (!res.ok) throw new Error('网络响应错误');
+          return res.json();
+      })
+      .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        const newCommentElement = createCommentElement(data);
+
+        if (data.parent_id) {
+          // 如果是回复, 找到父评论并追加
+          const parentComment = document.getElementById(`comment-${data.parent_id}`);
+          const repliesContainer = parentComment.closest('.comment-thread').querySelector('.comment-replies');
+          repliesContainer.appendChild(newCommentElement);
+          form.closest('.reply-form-container').style.display = 'none'; // 成功后隐藏表单
+        } else {
+          // 如果是顶级评论
+          const commentList = document.getElementById('commentList');
+          const emptyMsg = commentList.querySelector('.empty-comments');
+          if (emptyMsg) emptyMsg.remove(); // 移除 "暂无评论"
+          commentList.prepend(newCommentElement); // 添加到列表顶部
+        }
+        
+        textarea.value = ''; // 清空输入框
+      })
+      .catch(error => {
+        console.error('评论提交出错:', error);
+        alert('评论发送失败，请稍后再试。');
+      })
+      .finally(() => {
+        submitButton.disabled = false;
+        submitButton.textContent = form.classList.contains('reply-form') ? '提交回复' : '发送';
+      });
+    }
+  });
+})();
+</script>
+{% endblock %}
+{% endblock %}

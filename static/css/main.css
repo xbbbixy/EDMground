@@ -1,0 +1,410 @@
+/* ========== 全局主题样式 ========== */
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #0a0a0f;
+  color: #f5f5f5;
+}
+
+a {
+  color: #66d9ef;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+a:hover {
+  color: #ff77ff;
+}
+
+/* ========== 导航栏 ========== */
+.navbar {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: rgba(15, 15, 25, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #222;
+  z-index: 999;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+}
+
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.logo span {
+  color: #ff0080;
+}
+
+.nav-links a {
+  margin: 0 12px;
+  font-weight: 500;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  left: 0;
+  bottom: -3px;
+  background: linear-gradient(90deg, #00f0ff, #ff00aa);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* ========== 登录/注册按钮 ========== */
+.nav-auth a {
+  margin-left: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.btn-login {
+  border: 1px solid #00f0ff;
+  color: #00f0ff;
+}
+
+.btn-login:hover {
+  background: #00f0ff;
+  color: #0a0a0f;
+}
+
+.btn-register {
+  background: linear-gradient(90deg, #ff00aa, #ff8800);
+  color: white;
+}
+
+.btn-register:hover {
+  opacity: 0.85;
+}
+
+.btn-profile {
+  background: #222;
+  border: 1px solid #666;
+  color: #ddd;
+}
+
+.btn-profile:hover {
+  color: #fff;
+  border-color: #ff00aa;
+}
+
+.btn-logout {
+  color: #999;
+}
+
+.btn-logout:hover {
+  color: #ff5555;
+}
+
+/* ========== 消息框样式 ========== */
+.messages {
+  max-width: 800px;
+  margin: 1rem auto;
+}
+
+.message {
+  background: #111;
+  border-left: 4px solid #00f0ff;
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+}
+
+/* ========== 主内容区 ========== */
+.main-content {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+/* ========== 页脚 ========== */
+.footer {
+  text-align: center;
+  padding: 1rem 0;
+  color: #999;
+  font-size: 0.9rem;
+  border-top: 1px solid #222;
+}
+
+/* ========== 响应式适配 ========== */
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .nav-links a {
+    margin: 6px 8px;
+  }
+  .nav-auth {
+    margin-top: 10px;
+  }
+}
+.post-attachments {
+  margin-top: 20px;
+}
+.attachment-block {
+  margin-bottom: 16px;
+}
+.post-image {
+  max-width: 100%;
+  border-radius: 8px;
+}
+.post-audio,
+.post-video {
+  width: 100%;
+  margin-top: 6px;
+}
+#page-content,
+.main-content,
+.page-container {
+  pointer-events: auto !important;
+}
+.global-player-playlist,
+.global-player {
+  pointer-events: auto;
+}
+
+.navbar {
+  pointer-events: auto;
+}
+
+.decorative::before,
+.decorative::after {
+  pointer-events: none;
+}
+
+.force-layout * {
+  transition: none !important;
+}
+
+/* ===== Modal 通用 ===== */
+.modal.hidden {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+.modal-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(3px);
+}
+
+.modal-panel {
+  position: relative;
+  width: 420px;
+  max-width: calc(100% - 40px);
+  margin: 10vh auto;
+  background: rgba(22, 26, 34, 0.95);
+  border-radius: 16px;
+  padding: 24px 26px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.6);
+}
+
+.modal-title {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.modal .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.modal input[type="text"],
+.modal textarea {
+  background: #0f1115;
+  border: 1px solid #23283a;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #e6e6eb;
+}
+
+.modal textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* 歌单多选列表 */
+.playlist-select-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.playlist-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  cursor: pointer;
+}
+
+.playlist-option:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.playlist-option input {
+  transform: scale(1.1);
+}
+
+/* =========================
+   创建歌单弹窗（专用样式，避免冲突）
+========================= */
+.playlist-modal .modal-panel {
+  background: rgba(22, 26, 34, 0.98);
+}
+
+/* 表单控件 */
+.playlist-modal input[type="text"],
+.playlist-modal textarea {
+  background: #0f1115;
+  border: 1px solid #23283a;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #e6e6eb;
+  font-size: 14px;
+}
+
+/* ✅ 重点：修复“选择文件”按钮 */
+.playlist-modal input[type="file"] {
+  font-size: 13px;
+  color: #aaa;
+  background: transparent;
+  border: none;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+/* 让 file input 看起来更像按钮（webkit） */
+.playlist-modal input[type="file"]::-webkit-file-upload-button {
+  background: #1e2230;
+  border: 1px solid #2a2f44;
+  border-radius: 999px;
+  padding: 6px 14px;
+  color: #ccc;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+
+.playlist-modal input[type="file"]::-webkit-file-upload-button:hover {
+  background: #2a2f44;
+  color: #fff;
+}
+
+/* =========================
+   弹窗底部按钮（彻底隔离 profile.css）
+========================= */
+.playlist-modal .modal-actions .btn-primary {
+  background: linear-gradient(135deg, #7c4dff, #5b3df5);
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.playlist-modal .modal-actions .btn-secondary {
+  background: transparent;
+  border: 1px solid #2a2f44;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 14px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.playlist-modal .modal-actions .btn-secondary:hover {
+  background: #1e2230;
+  color: #fff;
+}
+
+/* =========================
+   选择歌单弹窗（按钮样式）
+========================= */
+
+/* 底部按钮区域 */
+.playlist-select-modal .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* 取消按钮 */
+.playlist-select-modal .modal-actions .js-cancel {
+  background: transparent;
+  border: 1px solid #2a2f44;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 14px;
+  color: #aaa;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+}
+
+.playlist-select-modal .modal-actions .js-cancel:hover {
+  background: #1e2230;
+  color: #fff;
+  border-color: #3a4060;
+}
+
+/* 确认收藏按钮 */
+.playlist-select-modal .modal-actions .js-confirm {
+  background: linear-gradient(135deg, #7c4dff, #5b3df5);
+  border: none;
+  border-radius: 999px;
+  padding: 8px 20px;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.playlist-select-modal .modal-actions .js-confirm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(93, 55, 103, 0.35);
+}

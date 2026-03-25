@@ -1,0 +1,42 @@
+{% for comment in comments %}
+<div class="comment-thread">
+    <div class="comment" id="comment-{{ comment.id }}">
+        <div class="comment-avatar">
+            {% if comment.author.profile.avatar %}
+                <img src="{{ comment.author.profile.avatar.url }}" alt="{{ comment.author.username }}'s avatar">
+            {% else %}
+                <div class="avatar-placeholder">🎧</div>
+            {% endif %}
+        </div>
+        <div class="comment-body">
+            <p class="comment-meta">
+                <a href="{% url 'users:profile' comment.author.id %}" class="js-spa-link">{{ comment.author.username }}</a>
+                 · {{ comment.created_at|date:"Y-m-d H:i" }}
+            </p>
+            <div class="comment-content">{{ comment.content|linebreaks }}</div>
+            <div class="comment-actions">
+                <button class="btn-reply js-reply-btn" data-comment-id="{{ comment.id }}">回复</button>
+            </div>
+            <div class="reply-form-container" id="reply-form-{{ comment.id }}" style="display: none;">
+                <form class="comment-form reply-form" method="post" action="{% url 'community:add_comment' post.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                    <textarea name="content" rows="2" placeholder="回复 @{{ comment.author.username }}..." required></textarea>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">提交回复</button>
+                        <button type="button" class="btn-secondary js-cancel-reply" data-comment-id="{{ comment.id }}">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% if comment.children %}
+    <div class="comment-replies">
+        {% with comments=comment.children %}
+            {% include "community/_comment_thread.html" %}
+        {% endwith %}
+    </div>
+    {% endif %}
+</div>
+{% endfor %}

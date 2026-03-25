@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}个人中心{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+<section class="profile-page">
+
+    <!-- ===== 个人信息 ===== -->
+    <div class="profile-header card">
+        <div class="profile-avatar">
+            {% if profile_user.profile.avatar %}
+                <img src="{{ profile_user.profile.avatar.url }}" alt="avatar">
+            {% else %}
+                <div class="avatar-placeholder">🎧</div>
+            {% endif %}
+        </div>
+
+        <div class="profile-info">
+            <h2 class="username">
+                {% if profile_user.profile.nickname %}
+                    {{ profile_user.profile.nickname }}
+                {% else %}
+                    {{ profile_user.username }}
+                {% endif %}
+            </h2>
+            <p class="email">{{ profile_user.email|default:"未设置邮箱" }}</p>
+            <p class="join-time">加入于 {{ profile_user.date_joined|date:"Y-m-d" }}</p>
+
+            {% if request.user == profile_user %}
+                <a href="{% url 'users:edit_profile' %}" class="btn-primary">
+                    编辑个人资料
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 class="card-title">🔗 社交链接</h3>
+
+        <div class="social-card-list">
+            {% if profile_user.profile.instagram %}
+                <a href="{{ profile_user.profile.instagram }}"
+                   target="_blank"
+                   class="social-card instagram">
+                    Instagram
+                </a>
+            {% endif %}
+
+            {% if profile_user.profile.twitter %}
+                <a href="{{ profile_user.profile.twitter }}"
+                   target="_blank"
+                   class="social-card twitter">
+                    Twitter
+                </a>
+            {% endif %}
+
+            {% if profile_user.profile.soundcloud %}
+                <a href="{{ profile_user.profile.soundcloud }}"
+                   target="_blank"
+                   class="social-card soundcloud">
+                    SoundCloud
+                </a>
+            {% endif %}
+
+            {% if not profile_user.profile.instagram and not profile_user.profile.twitter and not profile_user.profile.soundcloud %}
+                <p class="muted">TA 还没有添加社交链接</p>
+            {% endif %}
+        </div>
+    </div>
+
+
+
+    <!-- ===== 音乐基因 ===== -->
+    <div class="card">
+        <h3 class="card-title">🎧 音乐基因</h3>
+        <div class="music-genres">
+            {% for g in profile_user.profile.music_genres.all %}
+                <a href="{% url 'genres:detail' g.slug %}" class="js-spa-link genre-tag">
+                    {{ g.name }}
+                </a>
+            {% empty %}
+                <p class="muted">TA 还没有设置音乐基因</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ===== 我的歌单 ===== -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">🎵 {% if request.user == profile_user %}我{% else %}TA{% endif %}的歌单</h3>
+
+          {% if request.user == profile_user %}
+            <button class="btn-create-playlist js-create-playlist">
+              新建歌单
+            </button>
+          {% endif %}
+        </div>
+
+
+      <div class="playlist-grid">
+        {% for p in playlists %}
+          <div class="playlist-card">
+
+            <a href="{% url 'users:playlist_detail' p.id %}" class="playlist-cover js-spa-link">
+              {% if p.cover %}
+                <img src="{{ p.cover.url }}" alt="{{ p.name }}">
+              {% else %}
+                <div class="playlist-placeholder">🎧</div>
+              {% endif %}
+            </a>
+
+            <div class="playlist-info">
+              <div class="playlist-name">{{ p.name }}</div>
+
+              {% if request.user == profile_user %}
+                <button
+                  class="btn-playlist-delete js-delete-playlist"
+                  data-id="{{ p.id }}"
+                >
+                  删除
+                </button>
+              {% endif %}
+            </div>
+
+          </div>
+        {% empty %}
+          <p class="muted">你还没有创建歌单</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card">
+        <h3 class="card-title">❤️ {% if request.user == profile_user %}我{% else %}TA{% endif %}收藏的艺术家</h3>
+
+        <div class="fav-artist-grid">
+            {% for artist in profile_user.profile.favorites_artists.all %}
+                <div class="artist-card">
+
+                    <a href="{{ artist.get_absolute_url }}" class="js-spa-link artist-cover">
+                        {% if artist.avatar %}
+                            <img src="{{ artist.avatar.url }}" alt="{{ artist.name }}">
+                        {% else %}
+                            <div class="artist-placeholder">🎵</div>
+                        {% endif %}
+                    </a>
+
+                    <div class="artist-info">
+                        <a href="{{ artist.get_absolute_url }}" class="artist-name">
+                            {{ artist.name }}
+                        </a>
+
+                        {% if request.user == profile_user %}
+                            <button class="fav-btn" data-id="{{ artist.id }}">
+                                取消收藏
+                            </button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            {% empty %}
+                <p class="muted">还没有收藏艺术家</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 class="card-title">📝 {% if request.user == profile_user %}我{% else %}TA{% endif %}的帖子</h3>
+
+        <div class="post-list">
+            {% for post in my_posts %}
+                <div class="post-item">
+                    <a href="{{ post.get_absolute_url }}" >
+                        {{ post.title }}
+                    </a>
+
+                    {% if request.user == profile_user %}
+                        <a href="{% url 'community:delete_post' post.id %}" class="danger-link">
+                            删除
+                        </a>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="muted">还没有发布过帖子</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if request.user == profile_user %}
+    <!-- ===== 通知 ===== -->
+    <div class="card">
+        <h3 class="card-title">
+            🔔 通知
+            {% if unread_count %}
+                <span class="badge">{{ unread_count }}</span>
+            {% endif %}
+        </h3>
+
+        <ul class="notification-list">
+            {% for n in my_notifications %}
+                <li class="notification-item {% if not n.is_read %}unread{% endif %}">
+                    {% if n.link_url %}
+                        <a href="{{ n.link_url }}" class="js-spa-link">
+                            {{ n.message }}
+                        </a>
+                    {% else %}
+                        {{ n.message }}
+                    {% endif %}
+                    <span class="time">{{ n.created_at|date:"Y-m-d H:i" }}</span>
+                </li>
+            {% empty %}
+                <li class="muted">暂无通知</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if request.user == profile_user %}
+        <div class="logout-area">
+            <a href="{% url 'users:logout' %}" class="btn-secondary">退出登录</a>
+        </div>
+    {% endif %}
+
+</section>
+{% endblock %}

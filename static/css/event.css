@@ -1,0 +1,321 @@
+/* =========================
+   活动主页
+========================= */
+.events-page {
+  max-width: 1320px;
+  margin: 40px auto;
+  padding: 0 32px;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+/* 筛选栏 */
+.event-filter {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.event-filter input,
+.event-filter select,
+.event-filter button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #1e2230;
+  color: #fff;
+}
+
+.event-filter button:hover {
+  background: #2a2f42;
+  transform: translateY(-2px);
+}
+
+/* =========================
+   热门活动轮播
+========================= */
+.event-carousel {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  margin-bottom: 60px;
+}
+
+.event-carousel-card {
+  min-width: 320px;
+  height: 420px;
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.event-carousel-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-carousel-card .overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.75), transparent 60%);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* 轮播按钮 */
+.carousel-wrapper {
+  position: relative;
+}
+
+/* 左右按钮 */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+
+  background: rgba(22, 26, 34, 0.85);
+  color: #fff;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 6px 18px rgba(0,0,0,.45);
+  transition: background .2s, transform .2s, opacity .2s;
+}
+
+.carousel-btn:hover {
+  background: rgba(124, 77, 255, 0.9);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.carousel-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-btn.prev {
+  left: -18px;
+}
+
+.carousel-btn.next {
+  right: -18px;
+}
+
+.carousel-btn {
+  opacity: 0.6;
+}
+
+.carousel-wrapper:hover .carousel-btn {
+  opacity: 1;
+}
+
+/* 小屏优化 */
+@media (max-width: 768px) {
+  .carousel-btn {
+    display: none; /* 移动端用滑动即可 */
+  }
+}
+/* =========================
+   活动卡片列表
+========================= */
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+.event-card {
+  background: #161a22;
+  border-radius: 16px;
+  width:100%;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  transition: transform .25s;
+}
+
+.event-card:hover {
+  transform: translateY(-6px);
+}
+
+.event-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.event-info {
+  padding: 16px;
+}
+
+.event-info h3 {
+  margin: 0 0 6px;
+}
+
+.meta {
+  font-size: 13px;
+  color: #aaa;
+}
+
+.genres span {
+  font-size: 12px;
+  background: rgba(124,77,255,.15);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-right: 6px;
+}
+
+/* =========================
+   活动详情页
+========================= */
+.back-to-list {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #aaa;
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.back-to-list:hover {
+  color: #fff;
+}
+
+.event-detail {
+  max-width: 960px;
+  margin: 40px auto;
+}
+
+.event-hero img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+.event-detail-card {
+  background: #161a22;
+  border-radius: 18px;
+  padding: 28px;
+  margin-top: -60px;
+  position: relative;
+  box-shadow: 0 12px 32px rgba(0,0,0,.45);
+}
+
+.event-detail-card h1 {
+  margin-top: 0;
+}
+
+.event-detail-card .meta {
+  color: #aaa;
+  margin-bottom: 20px;
+}
+
+.ticket-btn {
+  display: inline-block;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #7c4dff, #5b3df5);
+  padding: 12px 26px;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.event-price {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.event-purchase-info {
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.6;
+}
+
+.event-info-section {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.event-info-block {
+  position: relative;
+  padding: 16px 18px 16px 20px;
+  background: #141824;
+  border-radius: 14px;
+  border: 1px solid #222;
+}
+
+/* 左侧标识条 */
+.event-info-block::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 4px;
+  border-radius: 4px;
+  background: #7c4dff;
+}
+
+/* 标题 */
+.event-info-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+/* 内容 */
+.event-info-content {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #ccc;
+}
+
+/* ===== 类型区分（细微但有效） ===== */
+
+/* 票价 */
+.event-info-block.price::before {
+  background: #ffb74d;
+}
+
+/* 购票须知 */
+.event-info-block.notice::before {
+  background: #ff6b6b;
+}
+
+/* 活动简介 */
+.event-info-block.description::before {
+  background: #4fc3f7;
+}
+
+/* =========================
+   分页
+========================= */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+}

@@ -1,0 +1,222 @@
+/* ===== 全局播放器条 ===== */
+.global-player {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 70px;
+  background: #050509;
+  border-top: 1px solid #222;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  z-index: 999;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.7);
+}
+
+.global-player.hidden {
+  display: none;
+}
+
+.gp-left, .gp-center, .gp-right {
+  display: flex;
+  align-items: center;
+}
+
+.gp-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.gp-center {
+  flex: 2;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gp-right {
+  flex: 1;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.gp-cover {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ff00aa, #00e5ff);
+  margin-right: 10px;
+  overflow: hidden;
+}
+
+.gp-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gp-meta {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gp-title {
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.gp-artist {
+  color: #bbb;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.gp-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.gp-btn {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 999px;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: #eee;
+  font-size: 14px;
+}
+
+.gp-btn:hover {
+  border-color: #ff00aa;
+  color: #ff00aa;
+}
+
+.gp-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.gp-time {
+  color: #888;
+  font-size: 11px;
+  min-width: 40px;
+  text-align: center;
+}
+
+#gp-progress {
+  flex: 1;
+}
+
+.gp-volume {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#gp-volume {
+  width: 100px;
+}
+
+.global-player-playlist {
+  position: fixed;
+  right: 20px;
+  bottom: 80px;
+  width: 320px;
+  max-height: 400px;
+  background: #070711;
+  border: 1px solid #333;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.8);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+}
+
+.global-player-playlist.hidden {
+  display: none;
+}
+
+.gp-playlist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid #333;
+  color: #eee;
+  font-size: 13px;
+}
+
+.gp-btn-small {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+}
+
+.gp-btn-small:hover {
+  color: #fff;
+}
+
+.gp-playlist-list {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+  overflow-y: auto;
+}
+
+.gp-playlist-item {
+  padding: 6px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.gp-playlist-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.gp-playlist-item.active {
+  background: rgba(255,0,170,0.16);
+}
+
+.gp-playlist-title {
+  font-size: 13px;
+  color: #fff;
+}
+
+.gp-playlist-artist {
+  font-size: 11px;
+  color: #aaa;
+}
+
+@media (max-width: 768px) {
+  .global-player {
+    flex-direction: column;
+    height: auto;
+    padding: 6px 10px;
+    gap: 6px;
+  }
+  .gp-left, .gp-center, .gp-right {
+    width: 100%;
+    justify-content: center;
+  }
+  #gp-volume {
+    width: 80px;
+  }
+}
+.global-player {
+  pointer-events: auto; /* 仅自己可交互 */
+}

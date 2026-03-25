@@ -1,0 +1,160 @@
+{% load static %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}EDMground{% endblock %}</title>
+
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" data-global-css>
+  <link rel="stylesheet" href="{% static 'css/player.css' %}" data-global-css>
+  <link rel="stylesheet" href="{% static 'css/lightbox.css' %}" data-global-css>
+{% block extra_head %}
+    {% endblock %}
+  <script src="{% static 'js/utils.js' %}" data-global-js></script>
+  <script src="{% static 'js/favorite.js' %}" data-global-js></script>
+  <script src="{% static 'js/carousel.js' %}" data-global-js></script>
+  <script src="{% static 'js/home.js' %}" data-global-js></script>
+  <script src="{% static 'js/playlist-favorite.js' %}"></script>
+  <script src="{% static 'js/playlist-manage.js' %}"></script>
+
+</head>
+<body>
+
+  <!-- 顶部导航 -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <div class="nav-left">
+        {# 加 js-spa-link，让点击 logo 不刷新整页 #}
+        <a href="{% url 'core:home' %}" class="logo js-spa-link">EDM<span>ground</span></a>
+      </div>
+
+      <nav class="nav-links">
+        <a href="{% url 'artists:list' %}" class="js-spa-link">艺术家</a>
+        <a href="{% url 'artists:library_home' %}" class="js-spa-link">曲库</a>
+        <a href="{% url 'genres:list' %}" class="js-spa-link">曲风</a>
+        <a href="{% url 'events:list' %}" class="js-spa-link">活动</a>
+        <a href="{% url 'community:home' %}" class="js-spa-link">社区</a>
+
+      </nav>
+
+      <div class="nav-auth">
+        {% if user.is_authenticated and not user.is_staff %}
+          <a href="{% url 'users:profile' user.id %}" class="btn-profile js-spa-link">个人中心</a>
+          {# 退出建议保留普通跳转，不加 js-spa-link #}
+          <a href="{% url 'users:logout' %}" class="btn-logout">退出</a>
+        {% else %}
+          <a href="{% url 'users:login' %}" class="btn-login">登录</a>
+          <a href="{% url 'users:register' %}" class="btn-register">注册</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- 消息提示 -->
+  {% if messages %}
+  <div class="messages container">
+    {% for message in messages %}
+      <div class="message">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- 主内容：注意这里的 id=page-content，用于 SPA 替换 -->
+  <main id="page-content" class="main-content container">
+      <div class="page-container">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+
+  <!-- 全局播放器 -->
+  <div id="global-player" class="global-player hidden">
+    <div class="gp-left">
+      <div class="gp-cover" id="gp-cover"></div>
+      <div class="gp-meta">
+        <div class="gp-title" id="gp-title">未播放任何歌曲</div>
+        <div class="gp-artist" id="gp-artist"></div>
+      </div>
+    </div>
+
+    <div class="gp-center">
+      <div class="gp-controls">
+        <button id="gp-prev" class="gp-btn">⏮</button>
+                <button id="gp-play-pause" class="gp-btn">▶</button>
+        <button id="gp-next" class="gp-btn">⏭</button>
+      </div>
+      <div class="gp-progress-row">
+        <span id="gp-current-time" class="gp-time">0:00</span>
+        <input type="range" id="gp-progress" min="0" max="100" value="0">
+        <span id="gp-duration" class="gp-time">0:00</span>
+      </div>
+    </div>
+
+    <div class="gp-right">
+      <div class="gp-volume">
+        <span>🔊</span>
+        <input type="range" id="gp-volume" min="0" max="100" value="80">
+      </div>
+      <button id="gp-toggle-playlist" class="gp-btn">📜 列表</button>
+    </div>
+
+    <!-- 隐藏 audio 元素 -->
+    <audio id="gp-audio"></audio>
+  </div>
+
+  <!-- 播放列表面板 -->
+  <div id="global-player-playlist" class="global-player-playlist hidden">
+    <div class="gp-playlist-header">
+      <span>播放列表</span>
+      <button id="gp-close-playlist" class="gp-btn-small">✕</button>
+    </div>
+    <ul id="gp-playlist-list" class="gp-playlist-list">
+      {# JS 动态填充 #}
+    </ul>
+  </div>
+
+  <!-- 创建歌单弹窗 -->
+    <div id="create-playlist-modal" class="modal playlist-modal hidden">
+      <div class="modal-mask"></div>
+
+      <div class="modal-panel">
+        <h3 class="modal-title">创建歌单</h3>
+
+        <form id="create-playlist-form">
+          <div class="form-group">
+            <label>歌单名称 *</label>
+            <input type="text" name="name" required placeholder="请输入歌单名称">
+          </div>
+
+          <div class="form-group">
+            <label>歌单简介（可选）</label>
+            <textarea name="description" placeholder="简单介绍一下这个歌单"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>歌单封面（可选）</label>
+            <input type="file" name="cover" accept="image/*">
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary js-close-modal">取消</button>
+            <button type="submit" class="btn-primary">创建并收藏</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+  <footer class="footer">
+    <div class="container">
+      <p>© EDMground — Electronic Dance Music Interactive Experience Platform</p>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/player.js' %}"></script>
+  <script src="{% static 'js/navigation.js' %}"></script>
+  <script src="{% static 'js/lightbox.js' %}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ album.title }}
+{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/album-detail.css' %}" data-page-css>
+<link rel="stylesheet" href="{% static 'css/playlist-detail.css' %}">
+{% endblock %}
+{% block extra_scripts %}
+<script src="{% static 'js/album-comments.js' %}" data-page-js></script>
+<script src="{% static 'js/album-detail.js' %}" data-page-js></script>
+{% endblock %}
+{% block content %}
+<div class="album-detail-page">
+
+  <!-- 专辑信息 -->
+  <section class="album-header">
+    <div class="album-cover">
+      {% if album.cover %}
+        <img src="{{ album.cover.url }}" alt="{{ album.title }}">
+      {% else %}
+        <div class="cover-placeholder">No Cover</div>
+      {% endif %}
+    </div>
+
+    <div class="album-meta">
+      <h1>{{ album.title }}</h1>
+
+      <div class="album-artists">
+        制作人：
+        {% for artist in album.artists.all %}
+          <a href="{{ artist.get_absolute_url }}" class="js-spa-link">
+            {{ artist.name }}
+          </a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if album.release_date %}
+        <div class="album-release">
+          发行时间：{{ album.release_date }}
+        </div>
+      {% endif %}
+
+      <div class="album-actions">
+        <button class="btn-playlist-play js-play-album">
+          ▶ 播放专辑
+        </button>
+        <button class="btn-playlist-play js-queue-album">
+          ＋ 插播专辑
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 专辑歌曲 -->
+  <section class="album-tracks">
+    <h2>曲目</h2>
+
+    <ul class="track-list">
+      {% for track in album.tracks.all %}
+        <li class="track-row">
+          <div class="track-main">
+            <span class="track-name">{{ track.title }}</span>
+              <!-- 曲风标签 -->
+            {% if track.genres.exists %}
+              <div class="track-genres">
+                {% for genre in track.genres.all %}
+                  <a
+                    href="{% url 'genres:detail' genre.slug %}"
+                    class="js-spa-link genre-tag">
+                    {{ genre.name }}
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="track-actions">
+            <!-- ▶ 播放 -->
+            <button
+              class="btn-play js-add-to-player"
+              data-autoplay="true"
+              data-track-id="{{ track.id }}"
+              data-title="{{ track.title }}"
+              data-audio="{{ track.audio_file.url }}"
+              data-cover="{% if track.cover %}{{ track.cover.url }}{% endif %}"
+              data-artists="{% for a in track.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+              data-genres="{% for g in track.genres.all %}{{ g.name }}{% if not forloop.last %},{% endif %}{% endfor %}">
+              ▶
+            </button>
+
+            <!-- ＋ 插播 -->
+            <button
+              class="btn-queue js-add-to-player"
+              data-autoplay="false"
+              data-track-id="{{ track.id }}"
+              data-title="{{ track.title }}"
+              data-audio="{{ track.audio_file.url }}"
+              data-cover="{% if track.cover %}{{ track.cover.url }}{% endif %}"
+              data-artists="{% for a in track.artists.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}"
+              data-genres="{% for g in track.genres.all %}{{ g.name }}{% if not forloop.last %},{% endif %}{% endfor %}">
+              ＋
+            </button>
+
+            <!-- ❤ 收藏 -->
+            <button
+              class="btn-fav-playlist js-fav-playlist {% if track.id in playlist_track_ids %}is-added{% endif %}"
+              data-track-id="{{ track.id }}"
+              title="收藏到歌单"
+            >
+              ❤
+            </button>
+
+          </div>
+        </li>
+      {% empty %}
+        <li class="empty">该专辑暂无歌曲</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <!-- 评论区 -->
+  <section class="album-comments">
+    <h2>评论</h2>
+
+    {% if user.is_authenticated %}
+      <form
+        method="post"
+        action="{% url 'artists:album_comment_create' album.slug %}"
+        class="comment-form js-comment-form">
+        {% csrf_token %}
+        <textarea name="content" placeholder="写下你的评论…"></textarea>
+        <button type="submit">发表评论</button>
+      </form>
+    {% else %}
+      <p><a href="{% url 'users:login' %}?next={{ request.path }}">登录</a>后才能发表评论</p>
+    {% endif %}
+
+    <!-- 评论列表 -->
+    <div class="comment-list">
+      {% for comment in comments %}
+        <div class="comment-item">
+
+          <div class="comment-meta">
+            <strong>{{ comment.user.username }}</strong>
+            <span>{{ comment.created_at|date:"Y-m-d H:i" }}</span>
+          </div>
+
+          <div class="comment-content">
+            {{ comment.content }}
+          </div>
+
+          <div class="comment-actions">
+            <button
+              class="btn-like-comment"
+              data-url="{% url 'artists:album_comment_toggle_like' comment.id %}">
+              ❤ <span>{{ comment.likes_count }}</span>
+            </button>
+          </div>
+
+          <!-- 回复 -->
+          <div class="comment-replies">
+            {% for reply in comment.replies.all %}
+              <div class="comment-reply">
+                <strong>{{ reply.user.username }}</strong>：
+                {{ reply.content }}
+              </div>
+            {% endfor %}
+          </div>
+
+          {% if user.is_authenticated %}
+            <form
+              method="post"
+              action="{% url 'artists:album_comment_create' album.slug %}"
+              class="reply-form js-reply-form">
+              {% csrf_token %}
+              <input type="hidden" name="parent_id" value="{{ comment.id }}">
+              <textarea name="content" placeholder="回复…"></textarea>
+              <button type="submit">回复</button>
+            </form>
+          {% endif %}
+
+        </div>
+      {% empty %}
+        <p class="empty">暂无评论</p>
+      {% endfor %}
+    </div>
+
+  </section>
+
+</div>
+{% endblock %}
